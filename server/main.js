@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import request from 'superagent';
-import { Counties } from '../imports/api/counties.js';
-import { Lsoas } from '../imports/api/lsoas.js';
+import { GeoData } from '../imports/api/geoData.js';
+import { RegionData } from '../imports/api/regionData.js';
 
 Meteor.startup(() => {
 
@@ -9,22 +9,19 @@ Meteor.startup(() => {
     if (err) console.log(err);
     else {
       _.forEach(res.body.data, function(doc) {
-        Counties.insert(doc);
+        GeoData.insert(doc);
       })
-      console.log(Counties.find({}).fetch());
     }
   }));
   request.get('https://q.nqminds.com/v1/datasets/SkxnzW0zi/data').end(Meteor.bindEnvironment(function(err, res) {
     if (err) console.log(err);
     else {
       _.forEach(res.body.data, function(doc) {
-        Lsoas.insert(doc);
-      })
+        RegionData.insert(doc);
+      })     
     }
   }));
-
-
 });
 
-import '../imports/api/counties.js';
-import '../imports/api/lsoas.js';
+import '../imports/api/geoData.js';
+import '../imports/api/regionData.js';
