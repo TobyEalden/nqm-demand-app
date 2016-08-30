@@ -19,6 +19,7 @@ class App extends Component {
     this.state = { 
       county: false,
     };
+    console.log(Counties.find({}).fetch());
   }
   
   zoomToCounty(_county) {

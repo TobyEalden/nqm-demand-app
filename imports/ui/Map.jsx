@@ -45,8 +45,6 @@ export default class Map extends Component {
     this.state.map.addLayer(this.state.currentLayer);
   }
 
-  
-
   componentDidUpdate() {  
 
     this.state.map.removeLayer(this.state.currentLayer);
