@@ -13,6 +13,7 @@ import Panel from '../imports/ui/Panel.jsx';
 import Controller from '../imports/api/controller.js';
 
 let controller = new Controller();
+controller.showData();
 
 const Main = () => (
   <MuiThemeProvider>

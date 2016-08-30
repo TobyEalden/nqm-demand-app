@@ -22,6 +22,3 @@ Meteor.startup(() => {
     }
   }));
 });
-
-import '../imports/api/geoData.js';
-import '../imports/api/regionData.js';

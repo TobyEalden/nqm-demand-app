@@ -7,6 +7,10 @@ export default class Controller {
 
   constructor() {
     Meteor.subscribe('geoData');
+    
+  }
+
+  showData() {
     console.log(GeoData.find().fetch());
   }
 
