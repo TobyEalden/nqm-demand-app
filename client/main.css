@@ -1,5 +1,15 @@
-/* CSS declarations go here */
+/* Remove default margins and padding */
 html, body {
   margin: 0;
   padding: 0;
+}
+
+/* disable browser auto-fill highlighting */
+input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+    -webkit-text-fill-color: #333;
+}
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0,0 0 0 50px white inset;
+    -webkit-text-fill-color: #333;
 }

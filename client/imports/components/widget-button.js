@@ -6,7 +6,7 @@ const style = {
   marginRight: 20,
 };
 
-export default class FilterButton extends Component {
+class WidgetButton extends Component {
 
   constructor(props) {
     super(props);
@@ -14,10 +14,16 @@ export default class FilterButton extends Component {
 
   render() {
     return (
-      <FloatingActionButton style={style} onClick={this.props.changeFilter}>
+      <FloatingActionButton style={style} onClick={this.props.action}>
         <ContentClear />
       </FloatingActionButton>
     )
   }
   
 }
+
+WidgetButton.propTypes = {
+  action: React.PropTypes.func
+}
+
+export default WidgetButton;

@@ -1,6 +1,6 @@
 {
   "public": {
-    "authEndPoint": "https://q.nqminds.com/token",
-    "shareId": "BJxTIcYyK"
+    "ddpServerURL": "https://tbx.nqminds.com/",
+    "authServerURL": "https://tdx.nqminds.com"
   }
 }
