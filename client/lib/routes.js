@@ -26,7 +26,15 @@ FlowRouter.triggers.enter([function(context, redirect) {
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Demand />; } });
+    mount(Layout, { content: function() { return <Demand widgets={{}}/>; } });
+  }
+});
+
+FlowRouter.route("/demand", {
+  name: "demand",
+  action: function(params, queryParams) {
+    let widgets = JSON.parse(queryParams.widgets);
+    mount(Layout, { content: function() { return <Demand widgets={widgets} />; } });
   }
 });
 

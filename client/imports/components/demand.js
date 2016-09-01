@@ -9,38 +9,27 @@ let DataWidget = composeWithTracker(loadData)(Widget);
 
 class Demand extends React.Component {
 
-  constructor() {
-    super();
-    this.state = {
-      widgets: {
-        Widget1: {
-          filter: {},
-          options: {}
-        },
-        Widget2: {
-          filter: {},
-          options: {}
-        }
-      }
-    };
-  }
-
   changeOptions(id, _options) {
-    console.log(id);
-    let temp = this.state;
-    temp.widgets[id].options = _options;
-    temp.widgets[id].filter = {};
-    console.log(temp);
-    this.setState(temp);
+    let widgets = this.props.widgets;
+    widgets[id] = widgets[id] ? widgets[id] : {};
+    widgets[id].options = _options;
+    console.log(widgets);
+    FlowRouter.go("demand", {}, {widgets: JSON.stringify(widgets)}); 
   }
   render() {
+    
+    let widgets = this.props.widgets;
     return (
       <div>
-        <DataWidget wgtId="Widget1" resourceId="Ske2zpaGj" filter={this.state.widgets.Widget1.filter} options={this.state.widgets.Widget1.options} update={this.changeOptions.bind(this)}/>
-        <DataWidget wgtId="Widget2" resourceId="Ske2zpaGj" filter={this.state.widgets.Widget2.filter} options={this.state.widgets.Widget2.options} update={this.changeOptions.bind(this)}/>
+        <DataWidget wgtId="Widget1" resourceId="Ske2zpaGj" filter={{}} options={widgets.Widget1 ? widgets.Widget1.options : {}} update={this.changeOptions.bind(this)}/>
+        <DataWidget wgtId="Widget2" resourceId="Ske2zpaGj" filter={{}} options={widgets.Widget2 ? widgets.Widget2.options : {}} update={this.changeOptions.bind(this)}/>
       </div>
     );
   }
+}
+
+Demand.propTypes = {
+  widgets: React.PropTypes.object
 }
 
 export default Demand;

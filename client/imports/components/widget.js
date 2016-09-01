@@ -9,7 +9,6 @@ class Widget extends React.Component {
   }
 
   render() {
-    console.log(this.props.data);
     const styles = {
       list: {
         padding: 4
