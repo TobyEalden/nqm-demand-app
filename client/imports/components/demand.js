@@ -2,27 +2,45 @@ import React from "react";
 import {Meteor} from "meteor/meteor";
 import {composeWithTracker} from 'react-komposer';
 
-import Widget from "./widget";
+import Pyramid from "./pyramid-wgt";
+import Map from "./map-wgt";
 import loadData from "../composers/load-resource-data";
+import loadMapData from "../composers/load-map-data";
 
-let DataWidget = composeWithTracker(loadData)(Widget);
+let PyramidWidget = composeWithTracker(loadData)(Pyramid);
+let MapWidget = composeWithTracker(loadMapData)(Map);
 
 class Demand extends React.Component {
 
-  changeOptions(id, _options) {
+  constructor(props) {
+    super(props);
+
+    // Bind event handlers to "this"
+    this._metaOptions = this._metaOptions.bind(this);
+    this._updateRegion = this._updateRegion.bind(this);
+
+  }
+
+  _updateRegion(_region) {
+    console.log(_region);
+  }
+
+  _metaOptions(wgtId, _options) {
     let widgets = this.props.widgets;
-    widgets[id] = widgets[id] ? widgets[id] : {};
-    widgets[id].options = _options;
+    widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
+    widgets[wgtId] = _options;
     console.log(widgets);
     FlowRouter.go("demand", {}, {widgets: JSON.stringify(widgets)}); 
   }
+
   render() {
     
     let widgets = this.props.widgets;
     return (
       <div>
-        <DataWidget wgtId="Widget1" resourceId="Ske2zpaGj" filter={{}} options={widgets.Widget1 ? widgets.Widget1.options : {}} update={this.changeOptions.bind(this)}/>
-        <DataWidget wgtId="Widget2" resourceId="Ske2zpaGj" filter={{}} options={widgets.Widget2 ? widgets.Widget2.options : {}} update={this.changeOptions.bind(this)}/>
+        <PyramidWidget wgtId="pyramid" resourceId="Ske2zpaGj" filter={{}} options={widgets.pyramid ? widgets.pyramid : {}} update={this._metaoptions}/>
+        <MapWidget wgtId="map" resourceId="HyxysZ1ic" filter={{}} options={widgets.map ? widgets.map : {}} updateRegion={this._updateRegion} />
+        
       </div>
     );
   }
