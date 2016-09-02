@@ -43,21 +43,6 @@ FlowRouter.route("/demand/:region/:lsoa?", {
   }
 });
 
-// Explorer route with parameter indicating the parent resource.
-FlowRouter.route("/explorer/:parent?", {
-  name: "explorer",
-  action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Explorer parent={params.parent} />; } });
-  }
-});
-
-// Show the data of the given resource
-FlowRouter.route("/resource/:id", {
-  name: "resource",
-  action: function(params) {
-    mount(Layout, { content: function() { return <ResourceData resourceId={params.id} />; }});
-  }
-});
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 
 FlowRouter.route("/auth-server", {
