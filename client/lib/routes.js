@@ -28,7 +28,7 @@ FlowRouter.triggers.enter([function(context, redirect) {
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Counties county="" widgets={{}}/>; } });
+    mount(Layout, { content: function() { return <Counties />; } });
   }
 });
 
@@ -37,8 +37,9 @@ FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
     
-    let widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
-    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region}/>; } });
+    const widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
+    
+    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region} />; } });
   }
 });
 

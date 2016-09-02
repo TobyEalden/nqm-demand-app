@@ -16,7 +16,7 @@ class Lsoa extends React.Component {
     super(props);
 
     // Bind event handlers to "this"
-    this._metaOptions = this._metaOptions.bind(this);
+    this._updateSettings = this._updateSettings.bind(this);
     this._updateRegion = this._updateRegion.bind(this);
 
   }
@@ -25,10 +25,11 @@ class Lsoa extends React.Component {
     console.log(_region);
   }
 
-  _metaOptions(wgtId, _options) {
+  _updateSettings(wgtId, _options, _filters) {
     let widgets = this.props.widgets;
     widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
-    widgets[wgtId] = _options;
+    widgets[wgtId].options = _options;
+    widgets[wgtId].filters = _filters;
     console.log(widgets);
     FlowRouter.go("demand", {region: this.props.region}, {widgets: JSON.stringify(widgets)}); 
   }
@@ -38,8 +39,8 @@ class Lsoa extends React.Component {
     let widgets = this.props.widgets;
     return (
       <div>
-        <PyramidWidget wgtId="pyramid" resourceId="Ske2zpaGj" filter={{}} options={widgets.pyramid ? widgets.pyramid : {}} update={this._metaOptions}/>
-        <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} options={widgets.map ? widgets.map : {}} updateRegion={this._updateRegion} update={this._metaOptions}/>        
+        <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={{}} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings}/>
+        <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} settings={widgets.map ? widgets.map : {}} updateRegion={this._updateRegion} update={this._updateSettings} />        
       </div>
     );
   }

@@ -7,11 +7,6 @@ class Map extends React.Component {
     this.state = {};
   }
 
-  getHeat(feature) {
-
-    return {color: '#FF0000', weight: 1, opacity: 0.5}
-  }
-
   updateRegionId(e) {
     //this.props.updateRegion("e.target.feature.properties.parent_id");
     this.state.map.fitBounds(e.target.getBounds());
@@ -24,35 +19,29 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    this.state.map = L.map('map', {
-        center: [53, -5],
-        zoom: 6
+
+    let map = L.map('map', {
+        center: [this.props.settings.options.centre.lat, this.props.settings.options.centre.lng],
+        zoom: 9
     });    
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
         id: 'nqmivan.12id4bh0',
         accessToken: 'pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA'
-    }).addTo(this.state.map);
+    }).addTo(map);
       
-    this.state.currentLayer = L.geoJson(this.props.geoData, {
-      style: this.getHeat,
+    let currentLayer = L.geoJson(this.props.geoData, {
+      style: {color: '#FF0000', weight: 1, opacity: 0.5},
       onEachFeature: this.onEachFeature.bind(this)
     });
-    this.state.map.addLayer(this.state.currentLayer);
+    map.addLayer(currentLayer);
+
+    this.setState({
+      map: map
+    });
+    
   }
-
- /* componentDidUpdate() {  
-    console.log(this.props.resources);
-
-    this.state.map.removeLayer(this.state.currentLayer);
-    this.state.currentLayer = L.geoJson(this.props.geoData, {
-      style: this.getHeat,
-      onEachFeature: this.onEachFeature.bind(this)
-    });
-    this.state.map.addLayer(this.state.currentLayer);
-  }*/
-
   render() {
     const styles = {
       map: {
@@ -71,7 +60,8 @@ Map.propTypes = {
   geoData: React.PropTypes.array,
   data: React.PropTypes.array,
   updateRegion: React.PropTypes.func,
-  update: React.PropTypes.func
+  update: React.PropTypes.func,
+  settings: React.PropTypes.object
 };
 
 export default Map;

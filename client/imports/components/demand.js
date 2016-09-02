@@ -17,9 +17,7 @@ class Demand extends React.Component {
     
     return (
       <div>
-        <LsoasDisplay resourceId="BkWqQQuBo" pipeline={pipeline} widgets={this.props.widgets} region={this.props.region}/>
-        
-        
+        <LsoasDisplay resourceId="BkWqQQuBo" pipeline={pipeline} widgets={this.props.widgets} region={this.props.region} />     
       </div>
     );
   }
