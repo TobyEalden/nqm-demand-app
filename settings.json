@@ -1,6 +1,7 @@
 {
   "public": {
     "ddpServerURL": "https://tbx.nqminds.com/",
-    "authServerURL": "https://tdx.nqminds.com"
+    "authServerURL": "https://tdx.nqminds.com",
+    "queryURL": "https://q.nqminds.com/v1/"
   }
 }

@@ -6,6 +6,7 @@ import connectionManager from "../connection-manager";
 function loadResourceData({resourceId, filter, options}, onData) {
   console.log("loadResourceData: ", resourceId, filter, options);
   
+  
   // Subscribe to the datasetData publication using the given filter and options.
   // The subscription will automatically re-run if any of the parameters change (i.e. resourceId, filter or options).
   const sub = connectionManager.subscribe("datasetData",resourceId, filter, options, {

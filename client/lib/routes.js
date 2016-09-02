@@ -6,7 +6,9 @@ import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
 import Explorer from "../imports/components/explorer";
 import Demand from "../imports/components/demand";
+import Counties from "../imports/components/counties";
 import ResourceData from "../imports/containers/resource-data-container";
+
 
 // Register a trigger to be called before every route.
 FlowRouter.triggers.enter([function(context, redirect) {
@@ -26,15 +28,17 @@ FlowRouter.triggers.enter([function(context, redirect) {
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Demand widgets={{}}/>; } });
+    mount(Layout, { content: function() { return <Counties county="" widgets={{}}/>; } });
   }
 });
 
-FlowRouter.route("/demand", {
+
+FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
-    let widgets = JSON.parse(queryParams.widgets);
-    mount(Layout, { content: function() { return <Demand widgets={widgets} />; } });
+    
+    let widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
+    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region}/>; } });
   }
 });
 

@@ -15,7 +15,7 @@ function loadResource({filter, options}, onData) {
     onReady() {
       // The subscription is ready - fetch the local results.
       const resources = connectionManager.resourceCollection.find(filter,options).fetch();
-      console.log(resources);
+
       // Pass on to the component via the resources property.
       onData(null, {resources: resources});
     }

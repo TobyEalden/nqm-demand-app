@@ -10,6 +10,7 @@ class ConnectionManager {
     this.connected = false;
     this.authenticated = new ReactiveVar(false);
     this.resourceCollection = this.datasetDataCollection = null;
+    this.authToken = "";
   }
   connect() {
     if (this.connected) {
@@ -33,7 +34,7 @@ class ConnectionManager {
   }
   useToken(token) {
     var self = this;
-
+    
     console.log("authenticating ddp connection");
 
     // Call the TDX server, passing our auth token.
@@ -42,6 +43,8 @@ class ConnectionManager {
         console.log("ddpConnection auth error: " + err.message);
       } else {
         console.log("ddpConnection auth result: " + result);
+
+        self.authToken = token;
 
         // Successfully authenticated - update the reactive variable.
         self.authenticated.set(true);
@@ -81,6 +84,7 @@ class ConnectionManager {
     this.connected = false;
     this._connection = null;
     this.resourceCollection = this.datasetDataCollection = null;
+    this.authToken = "";
     this.authenticated.set(false);
   }
   subscribe() {
