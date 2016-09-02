@@ -3,9 +3,10 @@ import {Meteor} from "meteor/meteor";
 import {composeWithTracker} from 'react-komposer';
 
 import loadAggregate from "../composers/aggregate";
+import CircularProgress from 'material-ui/CircularProgress';
 import Lsoas from "./lsoas";
 
-let LsoasDisplay = composeWithTracker(loadAggregate)(Lsoas);
+let LsoasDisplay = composeWithTracker(loadAggregate, CircularProgress)(Lsoas);
 
 
 class Demand extends React.Component {

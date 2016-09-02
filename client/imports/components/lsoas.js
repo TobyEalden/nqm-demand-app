@@ -2,13 +2,15 @@ import React from "react";
 import {Meteor} from "meteor/meteor";
 import {composeWithTracker} from 'react-komposer';
 
+import Panel from "./panel";
 import Pyramid from "./pyramid-wgt";
 import Map from "./map-wgt";
 import loadData from "../composers/load-resource-data";
 import loadMapData from "../composers/load-map-data";
+import CircularProgress from 'material-ui/CircularProgress';
 
-let PyramidWidget = composeWithTracker(loadData)(Pyramid);
-let MapWidget = composeWithTracker(loadMapData)(Map);
+let PyramidWidget = composeWithTracker(loadData, CircularProgress)(Pyramid);
+let MapWidget = composeWithTracker(loadMapData, CircularProgress)(Map);
 
 class Lsoa extends React.Component {
 
@@ -40,8 +42,12 @@ class Lsoa extends React.Component {
     let widgets = this.props.widgets;
     return (
       <div>
-        <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings}/>
-        <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} settings={widgets.map ? widgets.map : {}} updateRegion={this._updateLsoa} update={this._updateSettings} />        
+        <Panel>
+          <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} settings={widgets.map ? widgets.map : {}} updateRegion={this._updateLsoa} update={this._updateSettings} />      
+        </Panel>  
+        <Panel>
+          <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings}/>
+        </Panel>
       </div>
     );
   }
