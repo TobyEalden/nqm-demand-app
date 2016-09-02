@@ -17,12 +17,13 @@ class Lsoa extends React.Component {
 
     // Bind event handlers to "this"
     this._updateSettings = this._updateSettings.bind(this);
-    this._updateRegion = this._updateRegion.bind(this);
+    this._updateLsoa = this._updateLsoa.bind(this);
 
   }
 
-  _updateRegion(_region) {
-    console.log(_region);
+  _updateLsoa(_lsoa) {
+    console.log(_lsoa);
+    FlowRouter.go("demand", {region: this.props.region, lsoa: _lsoa}, {widgets: JSON.stringify(this.props.widgets)});
   }
 
   _updateSettings(wgtId, _options, _filters) {
@@ -31,16 +32,16 @@ class Lsoa extends React.Component {
     widgets[wgtId].options = _options;
     widgets[wgtId].filters = _filters;
     console.log(widgets);
-    FlowRouter.go("demand", {region: this.props.region}, {widgets: JSON.stringify(widgets)}); 
+    FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
 
   render() {
-    
+    let defaultFilter = {"area_id":{"$eq":this.props.lsoa}};
     let widgets = this.props.widgets;
     return (
       <div>
-        <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={{}} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings}/>
-        <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} settings={widgets.map ? widgets.map : {}} updateRegion={this._updateRegion} update={this._updateSettings} />        
+        <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings}/>
+        <MapWidget wgtId="map" mapId="HklvK8y5q" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} settings={widgets.map ? widgets.map : {}} updateRegion={this._updateLsoa} update={this._updateSettings} />        
       </div>
     );
   }
@@ -49,7 +50,8 @@ class Lsoa extends React.Component {
 Lsoa.propTypes = {
   widgets: React.PropTypes.object,
   lsoas: React.PropTypes.array,
-  region: React.PropTypes.string
+  region: React.PropTypes.string,
+  lsoa: React.PropTypes.string
 }
 
 export default Lsoa;

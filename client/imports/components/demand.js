@@ -17,7 +17,7 @@ class Demand extends React.Component {
     
     return (
       <div>
-        <LsoasDisplay resourceId="BkWqQQuBo" pipeline={pipeline} widgets={this.props.widgets} region={this.props.region} />     
+        <LsoasDisplay resourceId="BkWqQQuBo" pipeline={pipeline} widgets={this.props.widgets} region={this.props.region} lsoa={this.props.lsoa}/>     
       </div>
     );
   }
@@ -25,7 +25,8 @@ class Demand extends React.Component {
 
 Demand.propTypes = {
   widgets: React.PropTypes.object,
-  region: React.PropTypes.string
+  region: React.PropTypes.string,
+  lsoa: React.PropTypes.string
 }
 
 export default Demand;

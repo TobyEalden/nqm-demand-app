@@ -33,13 +33,13 @@ FlowRouter.route("/", {
 });
 
 
-FlowRouter.route("/demand/:region?", {
+FlowRouter.route("/demand/:region/:lsoa?", {
   name: "demand",
   action: function(params, queryParams) {
     
     const widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
     
-    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region} />; } });
+    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region} lsoa={params.lsoa} />; } });
   }
 });
 

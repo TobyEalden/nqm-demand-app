@@ -17,15 +17,16 @@ class PyramidWidget extends React.Component {
   }
 
 
-  componentDidMount() {
-    // set up dimension parameters
+  componentDidUpdate() {
+// set up dimension parameters
+    console.log(this.props.data);
 
     function percentage(p, total) {
       return p/total;
     }
 
     const dims = {
-      w: 500,
+      w: 800,
       h: 500
     }
     const margin = {
@@ -53,10 +54,11 @@ class PyramidWidget extends React.Component {
         else females.push(data);
       }
     });
-    maxValue = percentage(maxValue, totalPop); // Normalise
-
+   // maxValue = percentage(maxValue, totalPop); // Normalise
+   d3.select('#pyramid-svg').remove();
     // Create SVG
     let svg = d3.select('#pyramid').append('svg')
+      .attr("id", "pyramid-svg")
       .attr('width', margin.left + dims.w + margin.right)
       .attr('height', margin.top + dims.h + margin.bottom)
       .append('g')
@@ -94,13 +96,13 @@ class PyramidWidget extends React.Component {
     var xAxisRight = d3.svg.axis()
       .scale(xScale)
       .orient('bottom')
-      .tickFormat(d3.format('%'));
+      .ticks(10, ",f");
 
     var xAxisLeft = d3.svg.axis()
       // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
       .scale(xScale.copy().range([pointA, 0]))
       .orient('bottom')
-      .tickFormat(d3.format('%'));
+      .ticks(10, ",f");
     var leftBarGroup = svg.append('g')
       .attr('transform', translation(pointA, 0) + 'scale(-1,1)');
 
@@ -138,7 +140,7 @@ class PyramidWidget extends React.Component {
         .attr('class', 'bar left')
         .attr('x', 0)
         .attr('y', function(d) { return yScale(d.age_band); })
-        .attr('width', function(d) { return xScale(percentage(d.persons, totalPop)); })
+        .attr('width', function(d) { return xScale(d.persons); })
         .attr('height', yScale.rangeBand());
 
     rightBarGroup.selectAll('.bar.right')
@@ -147,13 +149,12 @@ class PyramidWidget extends React.Component {
         .attr('class', 'bar right')
         .attr('x', 0)
         .attr('y', function(d) { return yScale(d.age_band); })
-        .attr('width', function(d) { return xScale(percentage(d.persons, totalPop)); })
+        .attr('width', function(d) { return xScale(d.persons); })
         .attr('height', yScale.rangeBand());
 
     function translation(x,y) {
       return 'translate(' + x + ',' + y + ')';
     }
-    
   }
 
   render() {

@@ -10,6 +10,7 @@ class Map extends React.Component {
   updateRegionId(e) {
     //this.props.updateRegion("e.target.feature.properties.parent_id");
     this.state.map.fitBounds(e.target.getBounds());
+    this.props.updateRegion(e.target.feature.properties.LSOA11CD);
   }
 
   onEachFeature(feature, layer) {
