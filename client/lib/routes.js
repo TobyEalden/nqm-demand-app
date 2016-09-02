@@ -4,7 +4,6 @@ import {FlowRouter} from "meteor/kadira:flow-router";
 
 import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
-import Explorer from "../imports/components/explorer";
 import Demand from "../imports/components/demand";
 import Counties from "../imports/components/counties";
 import ResourceData from "../imports/containers/resource-data-container";
