@@ -23,9 +23,8 @@ class Counties extends React.Component {
   _updateRegion(_region, _centre) {
     let widgets = {};
     widgets.map = { 
-      options: {
-        centre: _centre
-      }
+      centre: _centre,
+      options: {limit: 1000}
     }
     FlowRouter.go("demand", {region: _region}, {widgets: JSON.stringify(widgets)});
   }
@@ -36,7 +35,7 @@ class Counties extends React.Component {
     let widgets = this.props.widgets;
     return (
       <div>
-        <MapWidget wgtId="map" mapId="HyxysZ1ic"  updateRegion={this._updateRegion}  />     
+        <MapWidget wgtId="map" mapId="BylaGzys9" options={{limit: 1000}} filter={{}} updateRegion={this._updateRegion}  />     
       </div>
     );
   }

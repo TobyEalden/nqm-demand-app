@@ -6,7 +6,6 @@ import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
 import Demand from "../imports/components/demand";
 import Counties from "../imports/components/counties";
-import ResourceData from "../imports/containers/resource-data-container";
 
 
 // Register a trigger to be called before every route.

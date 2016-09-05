@@ -3,9 +3,12 @@ import WidgetButton from "./widget-button.js";
 
 class Widget extends React.Component {
 
-  setOptions() {
-    let options = {limit: Math.floor(Math.random() *10)};
-    this.props.update(this.props.wgtId, options);
+  setFilter(_filter) {
+    this.props.update(this.props.wgtId, this.props.options, _filter);
+  }
+
+  setOptions(_options) {
+    this.props.update(this.props.wgtId, _options, this.props.filter);
   }
 
   render() {
@@ -28,8 +31,11 @@ class Widget extends React.Component {
 }
 
 Widget.propTypes = {
-  data: React.PropTypes.array,
-  update: React.PropTypes.func 
+  data: React.PropTypes.array.isRequired,
+  filter: React.PropTypes.object.isRequired,
+  options: React.PropTypes.object.isRequired,
+  wgtId: React.PropTypes.string.isRequired,
+  update: React.PropTypes.func
 };
 
 export default Widget;

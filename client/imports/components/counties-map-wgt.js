@@ -10,7 +10,7 @@ class CountiesMap extends React.Component {
     };
   }
 
-  updateRegionId(e) {
+  updateRegion(e) {
     this.props.updateRegion(e.target.feature.properties.CTYUA15CD, e.latlng);
   }
 
@@ -34,7 +34,7 @@ class CountiesMap extends React.Component {
   
   onEachFeature(feature, layer) {
     layer.on({
-      click: this.updateRegionId.bind(this),
+      click: this.updateRegion.bind(this),
       mouseover: this.highlight.bind(this),
       mouseout: this.resetStyle.bind(this)
     });
@@ -77,9 +77,13 @@ class CountiesMap extends React.Component {
 }
 
 CountiesMap.propTypes = {
-  geoData: React.PropTypes.array,
-  data: React.PropTypes.array,
-  updateRegion: React.PropTypes.func
+  geoData: React.PropTypes.array.isRequired,
+  updateRegion: React.PropTypes.func.isRequired,
+  wgtId: React.PropTypes.string.isRequired,
+  mapId: React.PropTypes.string.isRequired,
+  data: React.PropTypes.array, 
+  update: React.PropTypes.func,
+  centre: React.PropTypes.object
 };
 
 export default CountiesMap;

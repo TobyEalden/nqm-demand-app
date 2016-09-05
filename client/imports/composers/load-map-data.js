@@ -5,7 +5,8 @@ import connectionManager from "../connection-manager";
 // options - options to tweak the returned data, e.g. { sort: { timestamp: -1 }, limit: 10, fields: {temperature: 1}} will sort by timestamp descending, limit the result to 10 items, and only return the temperature field in each document.
 function loadMapData({mapId, filter, options}, onData) {
   console.log("loadResourceData: ", mapId, filter, options);
-  
+  const x = Date.now();
+
   
   // Subscribe to the datasetData publication using the given filter and options.
   // The subscription will automatically re-run if any of the parameters change (i.e. resourceId, filter or options).
@@ -14,7 +15,7 @@ function loadMapData({mapId, filter, options}, onData) {
       console.log("error subscribing to datasetData: " + err.message);
     },
     onReady() {
-      
+      console.log(Date.now() - x);
       // The subscription is ready
       filter = filter || {};
       // Add filter for dataset data (all datasetData subscriptions are stored in the same collection).

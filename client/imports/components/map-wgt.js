@@ -7,7 +7,7 @@ class Map extends React.Component {
     this.state = {};
   }
 
-  updateRegionId(e) {
+  updateRegion(e) {
     //this.props.updateRegion("e.target.feature.properties.parent_id");
     this.state.map.fitBounds(e.target.getBounds());
     this.props.updateRegion(e.target.feature.properties.LSOA11CD);
@@ -15,14 +15,14 @@ class Map extends React.Component {
 
   onEachFeature(feature, layer) {
     layer.on({
-      click: this.updateRegionId.bind(this)
+      click: this.updateRegion.bind(this)
     });
   }
 
   componentDidMount() {
 
     let map = L.map('map', {
-        center: [this.props.settings.options.centre.lat, this.props.settings.options.centre.lng],
+        center: [this.props.centre.lat, this.props.centre.lng],
         zoom: 9
     });    
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -58,11 +58,14 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
-  geoData: React.PropTypes.array,
-  data: React.PropTypes.array,
-  updateRegion: React.PropTypes.func,
+  geoData: React.PropTypes.array.isRequired,
+  updateRegion: React.PropTypes.func.isRequired,
+  wgtId: React.PropTypes.string.isRequired,
+  filter: React.PropTypes.object.isRequired,
+  options: React.PropTypes.object.isRequired,
+  data: React.PropTypes.array, 
   update: React.PropTypes.func,
-  settings: React.PropTypes.object
+  centre: React.PropTypes.object
 };
 
 export default Map;
