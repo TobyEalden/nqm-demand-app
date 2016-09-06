@@ -7,6 +7,8 @@ class Map extends React.Component {
     this.state = {};
   }
 
+
+
   updateRegion(e) {
     //this.props.updateRegion("e.target.feature.properties.parent_id");
     this.state.map.fitBounds(e.target.getBounds());
@@ -19,7 +21,18 @@ class Map extends React.Component {
     });
   }
 
+  style(feature) {
+    this.props.heat(feature).bind(this);
+  }
+
+
+
   componentDidMount() {
+
+    // These return empty arrays, wasn't a problem when only one data source on the component.
+    console.log(this.props.geoData);
+    console.log(this.props.data);
+    
 
     let map = L.map('map', {
         center: [this.props.centre.lat, this.props.centre.lng],
@@ -65,7 +78,8 @@ Map.propTypes = {
   options: React.PropTypes.object.isRequired,
   data: React.PropTypes.array, 
   update: React.PropTypes.func,
-  centre: React.PropTypes.object
+  centre: React.PropTypes.object,
+  heat: React.PropTypes.func
 };
 
 export default Map;
