@@ -22,7 +22,7 @@ class Map extends React.Component {
   }
 
   style(feature) {
-    this.props.heat(feature).bind(this);
+    return this.props.heat(feature);
   }
 
 
@@ -46,7 +46,7 @@ class Map extends React.Component {
     }).addTo(map);
       
     let currentLayer = L.geoJson(this.props.geoData, {
-      style: {color: '#FF0000', weight: 1, opacity: 0.5},
+      style: this.style.bind(this),
       onEachFeature: this.onEachFeature.bind(this)
     });
     map.addLayer(currentLayer);

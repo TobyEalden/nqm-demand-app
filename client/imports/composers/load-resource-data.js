@@ -17,7 +17,6 @@ function loadResourceData({resourceId, filter, options}, onData) {
       // The subscription is ready
       filter = filter || {};
       // Add filter for dataset data (all datasetData subscriptions are stored in the same collection).
-      filter._d = resourceId;
       // Fetch the data from the local cache.
       const datasetData = connectionManager.datasetDataCollection.find(filter,options).fetch();
       // Pass the data on to the component via the data property.      

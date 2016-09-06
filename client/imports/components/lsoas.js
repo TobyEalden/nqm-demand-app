@@ -34,17 +34,30 @@ class Lsoa extends React.Component {
     widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
     widgets[wgtId].options = _options;
     widgets[wgtId].filters = _filters;
-    console.log(widgets);
+
     FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
 
   popDensity(feature) {
-     var maxDensity = 20000;
-    var population = _.find(this.data, {age_band: "All Ages", year: 2013, area_id: feature.properties.LSOA11CD}).persons;
-    var density = Math.floor(255*(1-(population/feature.properties.area)/maxDensity));
-    var heat = '#ff' + density.toString(16) + density.toString(16); 
-    console.log("Pop" + population);
-    return {fillColor: heat, color: '#FF0000', weight: 1, opacity: 0.5};
+
+    let population = _.find(this.data, function (poplet) {
+      if (poplet.area_id == feature.properties.LSOA11CD) return true;
+      else return false;
+    });
+    
+    let d = population.persons/feature.properties.area;
+    let heat =  d > 0.014   ? "#800026" : 
+                d > 0.01    ? "#bd0026" :    
+                d > 0.005   ? "#e31a1c" :
+                d > 0.001   ? "#fc4e2a" :
+                d > 0.0005  ? "#fd8d3c" :
+                d > 0.0001  ? "#feb24c" :
+                d > 0.00008 ? "#fed976" :
+                d > 0.00005 ? "#4292c6":
+                d > 0.00003 ? "#2171b5" :
+                d > 0.00001 ? "#08519c" :
+                            "#08306b";
+    return {fillColor: heat, color: '#FF0000', weight: 1, fillOpacity: 0.5};
   }
 
   render() {
@@ -53,7 +66,7 @@ class Lsoa extends React.Component {
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId="HkgnNnueG" filter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
+          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId="HkgnNnueG" mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={{"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2013"}, "age_band":{"$eq":"All Ages"}}} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
         </Panel>  
         <Panel>
           <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings} />
