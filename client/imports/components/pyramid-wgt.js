@@ -19,7 +19,6 @@ class PyramidWidget extends React.Component {
 
   componentDidUpdate() {
 // set up dimension parameters
-    console.log(this.props.data);
 
     function percentage(p, total) {
       return p/total;

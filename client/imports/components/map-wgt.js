@@ -27,12 +27,7 @@ class Map extends React.Component {
 
 
 
-  componentDidMount() {
-
-    // These return empty arrays, wasn't a problem when only one data source on the component.
-    console.log(this.props.geoData);
-    console.log(this.props.data);
-    
+  componentDidMount() {  
 
     let map = L.map('map', {
         center: [this.props.centre.lat, this.props.centre.lng],

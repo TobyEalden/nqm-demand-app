@@ -18,6 +18,7 @@ function loadMapData({mapId, mapFilter, options}, onData) {
       // The subscription is ready
       mapFilter = mapFilter || {};
       // Add filter for dataset data (all datasetData subscriptions are stored in the same collection).
+      let clientFilter = _.extend(mapFilter,{_d: mapId})
       // Fetch the data from the local cache.
       const datasetData = connectionManager.datasetDataCollection.find(mapFilter,options).fetch();
       // Pass the data on to the component via the data property.      

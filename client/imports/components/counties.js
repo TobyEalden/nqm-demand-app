@@ -24,7 +24,7 @@ class Counties extends React.Component {
     let widgets = {};
     widgets.map = { 
       centre: _centre,
-      options: {limit: 5000}
+      options: {limit: 2500}
     }
     FlowRouter.go("demand", {region: _region}, {widgets: JSON.stringify(widgets)});
   }
