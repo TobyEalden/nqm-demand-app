@@ -1,4 +1,5 @@
 import React from "react";
+import YearSlider from "./year-slider";
 
 class Map extends React.Component {
 
@@ -25,6 +26,14 @@ class Map extends React.Component {
     return this.props.heat(feature);
   }
 
+  setYear(year) {
+    let filter = _.clone(this.props.filter);
+    filter.year = {"$eq":year.toString()};
+
+
+    this.props.update(this.props.wgtId, this.props.options, filter);
+  }
+
 
 
   componentDidMount() {  
@@ -47,10 +56,27 @@ class Map extends React.Component {
     map.addLayer(currentLayer);
 
     this.setState({
-      map: map
+      map: map,
+      currentLayer: currentLayer
     });
     
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.state.map.removeLayer(this.state.currentLayer);
+    let currentLayer = L.geoJson(nextProps.geoData, {
+      style: this.style.bind(this),
+      onEachFeature: this.onEachFeature.bind(this)
+    });
+    this.state.map.addLayer(currentLayer);
+    this.setState({
+      currentLayer: currentLayer
+    });
+  }
+
+
+
+
   render() {
     const styles = {
       map: {
@@ -59,7 +85,10 @@ class Map extends React.Component {
       }
     }
     return (
-      <div id="map" style={styles.map}>
+      <div>
+        <div id="map" style={styles.map}>
+        </div>
+        <YearSlider update={this.setYear.bind(this)}/>
       </div>
     )
   }

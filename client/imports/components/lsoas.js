@@ -29,11 +29,11 @@ class Lsoa extends React.Component {
     FlowRouter.go("demand", {region: this.props.region, lsoa: _lsoa}, {widgets: JSON.stringify(this.props.widgets)});
   }
 
-  _updateSettings(wgtId, _options, _filters) {
+  _updateSettings(wgtId, _options, _filter) {
     let widgets = this.props.widgets;
     widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
     widgets[wgtId].options = _options;
-    widgets[wgtId].filters = _filters;
+    widgets[wgtId].filter = _filter;
 
     FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
@@ -63,10 +63,16 @@ class Lsoa extends React.Component {
   render() {
     let defaultFilter = {"area_id":{"$eq":this.props.lsoa}};
     let widgets = this.props.widgets;
+
+    /* Put some logic here to determine what is passed
+    to the map for colour coding it */
+    let mapDataId = "SkxbDChh_";
+    let mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
+
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId="HkgnNnueG" mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={{"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2013"}, "age_band":{"$eq":"All Ages"}}} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
+          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId={widgets.map.resourceId ? widgets.map.resourceId : mapDataId} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
         </Panel>  
         <Panel>
           <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings} />

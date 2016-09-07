@@ -31,11 +31,12 @@ class Counties extends React.Component {
 
 
   render() {
-    
+    //BylaGzys9
+    //rygisHks5
     let widgets = this.props.widgets;
     return (
       <div>
-        <MapWidget wgtId="map" mapId="BylaGzys9" options={{limit: 1000}} mapFilter={{}} updateRegion={this._updateRegion}  />     
+        <MapWidget wgtId="map" mapId="rygisHks5" options={{limit: 1000}} mapFilter={{}} updateRegion={this._updateRegion}  />     
       </div>
     );
   }

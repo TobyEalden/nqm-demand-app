@@ -11,13 +11,15 @@ class CountiesMap extends React.Component {
   }
 
   updateRegion(e) {
-    this.props.updateRegion(e.target.feature.properties.CTYUA15CD, e.latlng);
+    //this.props.updateRegion(e.target.feature.properties.CTYUA15CD, e.latlng);
+    this.props.updateRegion(e.target.feature.properties.LAD15CD, e.latlng);
   }
 
   highlight(e) {
 
     this.setState({
-      name: e.target.feature.properties.CTYUA15NM
+     // name: e.target.feature.properties.CTYUA15NM
+    name: e.target.feature.properties.LAD15NM
     });
     let layer = e.target;
     layer.setStyle({
