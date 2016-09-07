@@ -8,10 +8,10 @@ import Pyramid from "./pyramid-wgt";
 import Map from "./map-wgt";
 import loadData from "../composers/load-resource-data";
 import loadMapData from "../composers/load-map-data";
-import CircularProgress from 'material-ui/CircularProgress';
+import ProgressIndicator from "./progress-indicator";
 
-let PyramidWidget = composeWithTracker(loadData, CircularProgress)(Pyramid);
-let MapWidget = composeAll(composeWithTracker(loadMapData, CircularProgress), composeWithTracker(loadData, CircularProgress))(Map);
+let PyramidWidget = composeWithTracker(loadData, ProgressIndicator)(Pyramid);
+let MapWidget = composeAll(composeWithTracker(loadMapData, ProgressIndicator), composeWithTracker(loadData, ProgressIndicator))(Map);
 
 class Lsoa extends React.Component {
 
@@ -40,24 +40,26 @@ class Lsoa extends React.Component {
 
   popDensity(feature) {
 
-    let population = _.find(this.data, function (poplet) {
-      if (poplet.area_id == feature.properties.LSOA11CD) return true;
-      else return false;
-    });
+    // let population = _.find(this.data, function (poplet) {
+    //   if (poplet.area_id == feature.properties.LSOA11CD) return true;
+    //   else return false;
+    // });
     
-    let d = population.persons/feature.properties.area;
-    let heat =  d > 0.014   ? "#800026" : 
-                d > 0.01    ? "#bd0026" :    
-                d > 0.005   ? "#e31a1c" :
-                d > 0.001   ? "#fc4e2a" :
-                d > 0.0005  ? "#fd8d3c" :
-                d > 0.0001  ? "#feb24c" :
-                d > 0.00008 ? "#fed976" :
-                d > 0.00005 ? "#4292c6":
-                d > 0.00003 ? "#2171b5" :
-                d > 0.00001 ? "#08519c" :
-                            "#08306b";
-    return {fillColor: heat, color: '#FF0000', weight: 1, fillOpacity: 0.5};
+    // let d = population.persons/feature.properties.area;
+    // let heat =  d > 0.014   ? "#800026" : 
+    //             d > 0.01    ? "#bd0026" :    
+    //             d > 0.005   ? "#e31a1c" :
+    //             d > 0.001   ? "#fc4e2a" :
+    //             d > 0.0005  ? "#fd8d3c" :
+    //             d > 0.0001  ? "#feb24c" :
+    //             d > 0.00008 ? "#fed976" :
+    //             d > 0.00005 ? "#4292c6":
+    //             d > 0.00003 ? "#2171b5" :
+    //             d > 0.00001 ? "#08519c" :
+    //                         "#08306b";
+    // return {fillColor: heat, color: '#FF0000', weight: 1, fillOpacity: 0.5};
+
+    return {fillColor: "#e31a1c", color: '#FF0000', weight: 1, fillOpacity: 0.5};
   }
 
   render() {

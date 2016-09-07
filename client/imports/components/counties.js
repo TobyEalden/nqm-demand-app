@@ -3,11 +3,11 @@ import {Meteor} from "meteor/meteor";
 import {composeWithTracker} from 'react-komposer';
 
 import Map from "./counties-map-wgt";
-import CircularProgress from 'material-ui/CircularProgress';
+import ProgressIndicator from "./progress-indicator";
 import loadData from "../composers/load-resource-data";
 import loadMapData from "../composers/load-map-data";
 
-let MapWidget = composeWithTracker(loadMapData, CircularProgress)(Map);
+let MapWidget = composeWithTracker(loadMapData, ProgressIndicator)(Map);
 
 class Counties extends React.Component {
 
