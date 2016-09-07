@@ -6,9 +6,6 @@ import connectionManager from "../connection-manager";
 function loadResourceData({resourceId, filter, options}, onData) {
   //console.log("loadResourceData: ", resourceId, filter, options);
     
-  if (filter && filter._d) {
-    debugger;
-  }
 
   // Subscribe to the datasetData publication using the given filter and options.
   // The subscription will automatically re-run if any of the parameters change (i.e. resourceId, filter or options).
@@ -21,12 +18,10 @@ function loadResourceData({resourceId, filter, options}, onData) {
       filter = filter || {};
       
       // Add filter for dataset data (all datasetData subscriptions are stored in the same collection).
-      let clientFilter = _.extend(filter,{_d: resourceId});
+      let clientFilter = _.extend({}, filter,{_d: resourceId});
       // Fetch the data from the local cache.
       const datasetData = connectionManager.datasetDataCollection.find(clientFilter,options).fetch();
       // Pass the data on to the component via the data property.    
-      
-      
       onData(null, {data: datasetData});
     }
   });

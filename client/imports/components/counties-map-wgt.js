@@ -42,6 +42,7 @@ class CountiesMap extends React.Component {
     });
   }
 
+
   componentDidMount() {
     let map = L.map('map', {
         center: [53, -3],

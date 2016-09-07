@@ -22,6 +22,11 @@ class YearSlider extends React.Component {
 
 
   render() {
+    const styles = {
+      slider: {
+        width: "49%"
+      }
+    }
     return (
       <div>
         <Slider
@@ -31,7 +36,9 @@ class YearSlider extends React.Component {
           step={1}
           value={this.state.currentYear}
           onChange={this.handleSlider.bind(this)}
+          style={styles.slider}
         />
+        <strong>{this.state.currentYear}</strong>
       </div>
     );
   }
