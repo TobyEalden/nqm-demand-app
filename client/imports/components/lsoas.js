@@ -70,11 +70,24 @@ class Lsoa extends React.Component {
     to the map for colour coding it */
     let mapDataId = "SkxbDChh_";
     let mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
-
+    console.log("map filter: ",mapDataFilter);
+    if (mapDataFilter._d) {
+      debugger;
+    }
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId={widgets.map.resourceId ? widgets.map.resourceId : mapDataId} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
+          <MapWidget 
+            wgtId="map" 
+            mapId="HklvK8y5q" 
+            resourceId={widgets.map.resourceId ? widgets.map.resourceId : mapDataId} 
+            mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}}
+            filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} 
+            options={widgets.map ? widgets.map.options : {limit: 1000}} 
+            centre={widgets.map.centre} 
+            updateRegion={this._updateLsoa} 
+            update={this._updateSettings} 
+            heat={this.popDensity}/>      
         </Panel>  
         <Panel>
           <PyramidWidget wgtId="pyramid" resourceId="HkgnNnueG" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings} />
