@@ -81,7 +81,7 @@ class Map extends React.Component {
     const styles = {
       map: {
         height: "600px",
-        width: "500px"
+        width: "700px"
       }
     }
     return (

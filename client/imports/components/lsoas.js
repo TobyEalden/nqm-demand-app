@@ -5,12 +5,14 @@ import {composeAll} from 'react-komposer';
 
 import Panel from "./panel";
 import Pyramid from "./pyramid-wgt";
+import Timeline from "./timeline-wgt";
 import Map from "./map-wgt";
 import loadData from "../composers/load-resource-data";
 import loadMapData from "../composers/load-map-data";
 import ProgressIndicator from "./progress-indicator";
 
 let PyramidWidget = composeWithTracker(loadData, ProgressIndicator)(Pyramid);
+let TimelineWidget = composeWithTracker(loadData, ProgressIndicator)(Timeline);
 let MapWidget = composeAll(composeWithTracker(loadMapData, ProgressIndicator), composeWithTracker(loadData, ProgressIndicator))(Map);
 
 class Lsoa extends React.Component {
@@ -24,13 +26,17 @@ class Lsoa extends React.Component {
 
   }
 
-  _updateLsoa(_lsoa) {
-    console.log(_lsoa);
-    FlowRouter.go("demand", {region: this.props.region, lsoa: _lsoa}, {widgets: JSON.stringify(this.props.widgets)});
+  _updateLsoa(lsoa) {
+    console.log(lsoa);
+    let widgets = _.clone(this.props.widgets);
+    _.forEach(widgets, function(wgt) {
+      if (wgt != widgets.map) wgt.filter.area_id = {"$eq":lsoa};
+    });
+    FlowRouter.go("demand", {region: this.props.region, lsoa: lsoa}, {widgets: JSON.stringify(widgets)});
   }
 
   _updateSettings(wgtId, _options, _filter) {
-    let widgets = this.props.widgets;
+    let widgets = _.clone(this.props.widgets);
     widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
     widgets[wgtId].options = _options;
     widgets[wgtId].filter = _filter;
@@ -76,7 +82,9 @@ class Lsoa extends React.Component {
           <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId={widgets.map.resourceId ? widgets.map.resourceId : mapDataId} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
         </Panel>  
         <Panel>
+
           <PyramidWidget wgtId="pyramid" resourceId="SkxbDChh_" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings} />
+          <TimelineWidget wgtId="timeline" resourceId="SkxbDChh_" filter={widgets.timeline ? widgets.timeline.filter : {"area_id":{"$eq":this.props.lsoa}, "age_band":{"$eq":"All Ages"}}} options={widgets.timeline ? widgets.timeline.options : {limit: 1000}} update={this._updateSettings} />
         </Panel>
       </div>
     );
