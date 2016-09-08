@@ -7,24 +7,25 @@ class PyramidWidget extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.props.update(this.props.wgtId, this.props.options, this.props.filter);
+    this.setFilter = this.setFilter.bind(this);
+    this.setOptions = this.setOptions.bind(this);
+    this.setYear = this.setYear.bind(this);
   }
 
-  setFilter(_filter) {
-    this.props.update(this.props.wgtId, this.props.options, _filter);
+  setFilter(filter) {
+    this.props.update(this.props.wgtId, this.props.options, filter);
   }
 
-  setOptions(_options) {
-    this.props.update(this.props.wgtId, _options, this.props.filter);
+  setOptions(options) {
+    this.props.update(this.props.wgtId, options, this.props.filter);
   }
 
   setYear(year) {
     let filter = _.clone(this.props.filter);
     filter.year = {"$eq":year.toString()};
-    this.props.update(this.props.wgtId, this.props.options, filter);
+    this.setFilter(filter);
   }
 
-  
 
   componentWillReceiveProps(nextProps) {
    
@@ -171,7 +172,7 @@ class PyramidWidget extends React.Component {
     return (
       <div>
         <div id="pyramid"></div>
-        <YearSlider update={this.setYear.bind(this)}/>
+        <YearSlider update={this.setYear}/>
       </div>
 
     );

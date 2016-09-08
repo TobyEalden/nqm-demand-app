@@ -1,5 +1,5 @@
 {
-  "name": "nqm-app-meteor-minimal-local-db",
+  "name": "nqm-demand-apb",
   "private": true,
   "scripts": {
     "start": "meteor run"
@@ -16,7 +16,7 @@
   },
   "version": "1.0.0",
   "main": "index.js",
-  "author": "toby.ealden@gmail.com",
+  "author": "ivan@nquiringminds.com",
   "license": "ISC",
   "description": ""
 }

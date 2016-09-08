@@ -1,50 +1,37 @@
 import React from "react";
 import {Meteor} from "meteor/meteor";
-import {composeWithTracker} from 'react-komposer';
-import {composeAll} from 'react-komposer';
 
 import Panel from "./panel";
-import Pyramid from "./pyramid-wgt";
-import Timeline from "./timeline-wgt";
-import Map from "./map-wgt";
-import loadData from "../composers/load-resource-data";
-import loadMapData from "../composers/load-map-data";
-import ProgressIndicator from "./progress-indicator";
-
-let PyramidWidget = composeWithTracker(loadData, ProgressIndicator)(Pyramid);
-let TimelineWidget = composeWithTracker(loadData, ProgressIndicator)(Timeline);
-let MapWidget = composeAll(composeWithTracker(loadMapData, ProgressIndicator), composeWithTracker(loadData, ProgressIndicator))(Map);
+import PyramidWidget from "../containers/pyramid-container";
+import TimelineWidget from "../containers/timeline-container";
+import MapWidget from "../containers/map-container";
 
 class Lsoa extends React.Component {
 
   constructor(props) {
     super(props);
-
     // Bind event handlers to "this"
-    this._updateSettings = this._updateSettings.bind(this);
-    this._updateLsoa = this._updateLsoa.bind(this);
-
+    this.updateSettings = this.updateSettings.bind(this);
+    this.updateLsoa = this.updateLsoa.bind(this);
   }
 
-  _updateLsoa(lsoa) {
-    console.log(lsoa);
+  updateLsoa(lsoa) {
     let widgets = _.clone(this.props.widgets);
-    _.forEach(widgets, function(wgt) {
+    _.forEach(widgets, function(wgt) { // Ensure each widget gets correct lsoa data
       if (wgt != widgets.map) wgt.filter.area_id = {"$eq":lsoa};
     });
     FlowRouter.go("demand", {region: this.props.region, lsoa: lsoa}, {widgets: JSON.stringify(widgets)});
   }
 
-  _updateSettings(wgtId, _options, _filter) {
+  updateSettings(wgtId, options, filter) { // Basic function to update widget settings
     let widgets = _.clone(this.props.widgets);
     widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
-    widgets[wgtId].options = _options;
-    widgets[wgtId].filter = _filter;
-
+    widgets[wgtId].options = options;
+    widgets[wgtId].filter = filter;
     FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
 
-  popDensity(feature) {
+  popDensity(feature) { // Styling function, can this be moved externally
 
     let population = _.find(this.data, function (poplet) {
       if (poplet.area_id == feature.properties.LSOA11CD) return true;
@@ -68,23 +55,24 @@ class Lsoa extends React.Component {
   }
 
   render() {
-    let defaultFilter = {"area_id":{"$eq":this.props.lsoa}, "year":{"$eq":"2015"}};
-    let widgets = this.props.widgets;
+    const pyramidFilter = {"area_id":{"$eq":this.props.lsoa}, "year":{"$eq":"2015"}};
+    const timelineFilter = {"area_id":{"$eq":this.props.lsoa}, "age_band":{"$eq":"All Ages"}}; 
+    const widgets = this.props.widgets;
 
     /* Put some logic here to determine what is passed
     to the map for colour coding it */
-    let mapDataId = "SkxbDChh_";
-    let mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
+    const mapFilter = {"properties.LSOA11CD":{"$in":this.props.lsoas}};
+    const mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
 
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId="HklvK8y5q" resourceId={widgets.map.resourceId ? widgets.map.resourceId : mapDataId} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this._updateLsoa} update={this._updateSettings} heat={this.popDensity}/>      
+          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={widgets.map.dataId} mapFilter={mapFilter} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this.updateLsoa} update={this.updateSettings} heat={this.popDensity}/>      
         </Panel>  
         <Panel>
 
-          <PyramidWidget wgtId="pyramid" resourceId="SkxbDChh_" filter={widgets.pyramid ? widgets.pyramid.filter : defaultFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this._updateSettings} />
-          <TimelineWidget wgtId="timeline" resourceId="SkxbDChh_" filter={widgets.timeline ? widgets.timeline.filter : {"area_id":{"$eq":this.props.lsoa}, "age_band":{"$eq":"All Ages"}}} options={widgets.timeline ? widgets.timeline.options : {limit: 1000}} update={this._updateSettings} />
+          <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid ? widgets.pyramid.filter : pyramidFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this.updateSettings} />
+          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} filter={widgets.timeline ? widgets.timeline.filter : timelineFilter} options={widgets.timeline ? widgets.timeline.options : {limit: 1000}} update={this.updateSettings} />
         </Panel>
       </div>
     );

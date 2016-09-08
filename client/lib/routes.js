@@ -22,7 +22,7 @@ FlowRouter.triggers.enter([function(context, redirect) {
   }
 }]);
 
-// This is the default route - render the explorer
+// This is the default route - render the demand app
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
@@ -30,13 +30,11 @@ FlowRouter.route("/", {
   }
 });
 
-
+// A county and/or lsoa has been selected, widget parameters are saved on url and passed in to the Demand component
 FlowRouter.route("/demand/:region/:lsoa?", {
   name: "demand",
-  action: function(params, queryParams) {
-    
+  action: function(params, queryParams) {    
     const widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
-    
     mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region} lsoa={params.lsoa} />; } });
   }
 });

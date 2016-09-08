@@ -8,18 +8,20 @@ class CountiesMap extends React.Component {
     this.state = {
       name: ""
     };
+
+    this.updateRegion = this.updateRegion.bind(this);
+    this.highlight = this.highlight.bind(this);
+    this.resetStyle = this.resetStyle.bind(this);
+    this.onEachFeature = this.onEachFeature.bind(this);
   }
 
   updateRegion(e) {
-    //this.props.updateRegion(e.target.feature.properties.CTYUA15CD, e.latlng);
     this.props.updateRegion(e.target.feature.properties.LAD15CD, e.latlng);
   }
 
   highlight(e) {
-
     this.setState({
-     // name: e.target.feature.properties.CTYUA15NM
-    name: e.target.feature.properties.LAD15NM
+      name: e.target.feature.properties.LAD15NM
     });
     let layer = e.target;
     layer.setStyle({
@@ -36,14 +38,13 @@ class CountiesMap extends React.Component {
   
   onEachFeature(feature, layer) {
     layer.on({
-      click: this.updateRegion.bind(this),
-      mouseover: this.highlight.bind(this),
-      mouseout: this.resetStyle.bind(this)
+      click: this.updateRegion,
+      mouseover: this.highlight,
+      mouseout: this.resetStyle
     });
   }
 
-
-  componentDidMount() {
+  componentDidMount() { // This map is static, it does not expect to update once drawn
     let map = L.map('map', {
         center: [53, -3],
         zoom: 6
@@ -57,7 +58,7 @@ class CountiesMap extends React.Component {
       
     let currentLayer = L.geoJson(this.props.geoData, {
       style: {color: '#FF0000', weight: 1, opacity: 0.5},
-      onEachFeature: this.onEachFeature.bind(this)
+      onEachFeature: this.onEachFeature
     });
     map.addLayer(currentLayer);
   }
@@ -69,6 +70,7 @@ class CountiesMap extends React.Component {
         width: "700px"
       }
     }
+
     return (
       <div>
         <div id="map" style={styles.map}>

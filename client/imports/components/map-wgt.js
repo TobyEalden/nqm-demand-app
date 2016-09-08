@@ -6,19 +6,18 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.updateRegion = this.updateRegion.bind(this);
+    this.setYear = this.setYear.bind(this);
   }
 
-
-
   updateRegion(e) {
-    //this.props.updateRegion("e.target.feature.properties.parent_id");
     this.state.map.fitBounds(e.target.getBounds());
     this.props.updateRegion(e.target.feature.properties.LSOA11CD);
   }
 
   onEachFeature(feature, layer) {
     layer.on({
-      click: this.updateRegion.bind(this)
+      click: this.updateRegion
     });
   }
 
@@ -29,19 +28,16 @@ class Map extends React.Component {
   setYear(year) {
     let filter = _.clone(this.props.filter);
     filter.year = {"$eq":year.toString()};
-
-
     this.props.update(this.props.wgtId, this.props.options, filter);
   }
-
-
 
   componentDidMount() {  
 
     let map = L.map('map', {
         center: [this.props.centre.lat, this.props.centre.lng],
         zoom: 9
-    });    
+    });   
+
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
@@ -55,7 +51,7 @@ class Map extends React.Component {
     });
     map.addLayer(currentLayer);
 
-    this.setState({
+    this.setState({ // Shouldn't really set state in componentDidMount...
       map: map,
       currentLayer: currentLayer
     });
@@ -64,17 +60,17 @@ class Map extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.state.map.removeLayer(this.state.currentLayer);
+
     let currentLayer = L.geoJson(nextProps.geoData, {
       style: this.style.bind(this),
       onEachFeature: this.onEachFeature.bind(this)
     });
     this.state.map.addLayer(currentLayer);
+
     this.setState({
       currentLayer: currentLayer
     });
   }
-
-
 
 
   render() {
@@ -88,7 +84,7 @@ class Map extends React.Component {
       <div>
         <div id="map" style={styles.map}>
         </div>
-        <YearSlider update={this.setYear.bind(this)}/>
+        <YearSlider update={this.setYear}/>
       </div>
     )
   }

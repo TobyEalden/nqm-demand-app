@@ -2,41 +2,34 @@ import React from "react";
 import {Meteor} from "meteor/meteor";
 import {composeWithTracker} from 'react-komposer';
 
-import Map from "./counties-map-wgt";
-import ProgressIndicator from "./progress-indicator";
-import loadData from "../composers/load-resource-data";
-import loadMapData from "../composers/load-map-data";
-
-let MapWidget = composeWithTracker(loadMapData, ProgressIndicator)(Map);
+import MapWidget from "../containers/county-map-container";
 
 class Counties extends React.Component {
 
   constructor(props) {
     super(props);
-
     // Bind event handlers to "this"
-    this._updateRegion = this._updateRegion.bind(this);
+    this.updateRegion = this.updateRegion.bind(this);
 
   }
 
-
-  _updateRegion(_region, _centre) {
+  updateRegion(region, centre) {
+    // Pass in the basic options to the demand app, such as region and map zoom location
     let widgets = {};
     widgets.map = { 
-      centre: _centre,
-      options: {limit: 2500}
+      centre: centre,
+      options: {limit: 2500},
+      dataId: Meteor.settings.public.populationData
     }
-    FlowRouter.go("demand", {region: _region}, {widgets: JSON.stringify(widgets)});
+    FlowRouter.go("demand", {region: region}, {widgets: JSON.stringify(widgets)});
   }
 
-
   render() {
-    //BylaGzys9
-    //rygisHks5
+
     let widgets = this.props.widgets;
     return (
       <div>
-        <MapWidget wgtId="map" mapId="rygisHks5" options={{limit: 1000}} mapFilter={{}} updateRegion={this._updateRegion}  />     
+        <MapWidget wgtId="map" mapId={Meteor.settings.public.countyGeo} options={{limit: 1000}} mapFilter={{}} updateRegion={this.updateRegion}  />     
       </div>
     );
   }

@@ -12,14 +12,13 @@ class YearSlider extends React.Component {
     this.state = {
       currentYear: 2015,
     }
+    this.handleSlider = this.handleSlider.bind(this);
   }
   
-
   handleSlider(event, value) {
     this.setState({currentYear: value});
     this.props.update(value);
   }
-
 
   render() {
     const styles = {
@@ -35,7 +34,7 @@ class YearSlider extends React.Component {
           max={2021}
           step={1}
           value={this.state.currentYear}
-          onChange={this.handleSlider.bind(this)}
+          onChange={this.handleSlider}
           style={styles.slider}
         />
         <strong>{this.state.currentYear}</strong>

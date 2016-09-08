@@ -1,5 +1,6 @@
 import connectionManager from "../connection-manager";
-import { HTTP } from 'meteor/http'
+import { HTTP } from "meteor/http";
+import {Meteor} from "meteor/meteor";
 
 function loadMapData({mapId, filter, options}, onData) {
   const headers = { authorization: "Bearer " + connectionManager.authToken };

@@ -2,6 +2,12 @@
   "public": {
     "ddpServerURL": "https://tbx.nqminds.com/",
     "authServerURL": "https://tdx.nqminds.com",
-    "queryURL": "https://q.nqminds.com/v1/"
+    "queryURL": "https://q.nqminds.com/v1/",
+    "countyGeo": "rygisHks5",
+    "lsoaMapping": "BkWqQQuBo",
+    "populationData": "SkxbDChh_",
+    "lsoaGeo": "HklvK8y5q"
   }
+  
+  
 }
