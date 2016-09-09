@@ -9,8 +9,8 @@ class TimelineWidget extends React.Component {
       height: 225,
       margin: {
         top: 10,
-        right: 10,
-        bottom: 15,
+        right: 40,
+        bottom: 20,
         left: 25,
       }
     };
@@ -43,8 +43,8 @@ class TimelineWidget extends React.Component {
     let svg = d3.select("#timeline" + this.props.wgtId);
 
     let data = {};
-
-    _.forEach(nextProps.data, function(d) {
+    // There is almost certainly a better way of doing this, need to get totals for each year.
+    _.forEach(nextProps.data, function(d) { 
       if (data[d.year]) data[d.year].total += d.persons;
       else data[d.year] = {
         year: parseInt(d.year),
@@ -72,7 +72,8 @@ class TimelineWidget extends React.Component {
     let xAxis = d3.svg.axis()
       .scale(xScale)
       .orient("bottom")
-      .ticks(7, ",f");
+      .ticks(7)
+      .tickFormat(d3.format("d"));
     
     let yAxis = d3.svg.axis()
       .scale(yScale)
@@ -85,10 +86,12 @@ class TimelineWidget extends React.Component {
 
 
     svg.select("#x-axis" + this.props.wgtId)
-        .call(xAxis);
+      .transition()
+      .call(xAxis);
 
     svg.select("#y-axis" + this.props.wgtId)
-        .call(yAxis);
+      .transition()
+      .call(yAxis);
 
     svg.select("#line" + this.props.wgtId)
       .datum(totals)
