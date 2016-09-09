@@ -7,8 +7,17 @@ class MapToggle extends React.Component {
   }
 
   render() {
+    const styles = {
+      div: {
+        position: "relative",
+        width: "49%",
+        textAlign: "center"
+      }
+    }
     return (
-      <Toggle label="Population Deltas" onToggle={this.props.toggle}/>
+      <div style={styles.div}>
+        <Toggle label="Population Deltas" onToggle={this.props.toggle}/>
+      </div>
     );
   }
 }

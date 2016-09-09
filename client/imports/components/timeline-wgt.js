@@ -66,7 +66,7 @@ class TimelineWidget extends React.Component {
       .range([0, this.state.width]);
 
     let yScale = d3.scale.linear()
-      .domain(d3.extent(totals, function(d) {return d.total}))
+      .domain([0, d3.max(totals, function(d) {return d.total})])
       .range([this.state.height, 0]);
 
     let xAxis = d3.svg.axis()

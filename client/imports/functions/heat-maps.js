@@ -33,7 +33,7 @@ function popDelta(feature) {
     else return false;
   }.bind(this));
 
-  if (!originalPop || !newPop) return {fillColor: "#FF0000", color: "#FF0000", weight: 1, fillOpacity: 0.5};
+  if (!originalPop || !newPop) return {color: "#FF0000", weight: 1, fillOpacity: 0.0};
   const delta = newPop.persons - originalPop.persons;
   
   let heat =  delta > 200   ? "#800026" : 

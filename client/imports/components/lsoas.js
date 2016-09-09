@@ -43,14 +43,13 @@ class Lsoa extends React.Component {
   }
 
   render() {
+    // Some default filters
     const pyramidFilter = {"area_id":{"$eq":this.props.lsoa}, "year":{"$eq":"2015"}};
     const timelineFilter = {"area_id":{"$eq":this.props.lsoa}, "age_band":{"$eq":"All Ages"}}; 
-    const widgets = this.props.widgets;
-
-    /* Put some logic here to determine what is passed
-    to the map for colour coding it */
     const mapFilter = {"properties.LSOA11CD":{"$in":this.props.lsoas}};
     const mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
+
+    const widgets = this.props.widgets;
 
     return (
       <div>
