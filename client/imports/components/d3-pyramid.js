@@ -34,23 +34,23 @@ class D3Pyramid extends React.Component {
       .attr('transform', this.translation(this.state.margin.left, this.state.margin.top));
 
     svg.append("g")
-      .attr('class', 'axis y left')
+      .attr('class', 'axis y left ' + this.props.wgtId)
       .attr('transform', this.translation(this.state.pointA, 0));
     svg.append('g')
-      .attr('class', 'axis y right')
+      .attr('class', 'axis y right ' + this.props.wgtId)
       .attr('transform', this.translation(this.state.pointB, 0));
     svg.append('g')
-      .attr('class', 'axis x left')
+      .attr('class', 'axis x left ' + this.props.wgtId)
       .attr('transform', this.translation(0, this.state.height));
     svg.append('g')
-      .attr('class', 'axis x right')
+      .attr('class', 'axis x right  ' + this.props.wgtId)
       .attr('transform', this.translation(this.state.pointB, this.state.height));
 
     let leftBarGroup = svg.append('g')
-      .attr("id", "leftBarGroup")
+      .attr("id", "leftBarGroup" + this.props.wgtId)
       .attr('transform', this.translation(this.state.pointA, 0) + 'scale(-1,1)');
     let rightBarGroup = svg.append('g')
-      .attr("id", "rightBarGroup")
+      .attr("id", "rightBarGroup" + this.props.wgtId)
       .attr('transform', this.translation(this.state.pointB, 0));
 
   }
@@ -72,15 +72,15 @@ class D3Pyramid extends React.Component {
 
     males.sort(function(a,b) {
       return b.age_band.replace(/(^\d+)(.+$)/i,'$1') - a.age_band.replace(/(^\d+)(.+$)/i,'$1');
-    })
+    });
     females.sort(function(a,b) {
       return b.age_band.replace(/(^\d+)(.+$)/i,'$1') - a.age_band.replace(/(^\d+)(.+$)/i,'$1');
-    })
+    });
 
     // Elements
     let svg = d3.select('#pyramid' + this.props.wgtId);
-    let leftBarGroup = svg.select("#leftBarGroup");
-    let rightBarGroup = svg.select("#rightBarGroup");
+    let leftBarGroup = svg.select("#leftBarGroup" + this.props.wgtId);
+    let rightBarGroup = svg.select("#rightBarGroup" + this.props.wgtId);
 
     // Scales
     let xScale = d3.scale.linear()
@@ -124,30 +124,30 @@ class D3Pyramid extends React.Component {
       .ticks(5, ",f");
     
     // Drawing
-    svg.selectAll(".axis.y.left")
+    svg.selectAll(".axis.y.left." + this.props.wgtId)
       .call(yAxisLeft)
       .selectAll('text')
       .style('text-anchor', 'middle');
     
-    svg.selectAll(".axis.y.right")
+    svg.selectAll(".axis.y.right." + this.props.wgtId)
       .call(yAxisRight);
 
-    svg.selectAll(".axis.x.left")
+    svg.selectAll(".axis.x.left." + this.props.wgtId)
       .transition()
       .call(xAxisLeft);
     
-    svg.selectAll(".axis.x.right")
+    svg.selectAll(".axis.x.right." + this.props.wgtId)
       .transition()
       .call(xAxisRight);
 
-    let barLeft = leftBarGroup.selectAll(".bar.left")
+    let barLeft = leftBarGroup.selectAll(".bar.left." + this.props.wgtId)
       .data(males);
-    let barRight = rightBarGroup.selectAll('.bar.right')
+    let barRight = rightBarGroup.selectAll('.bar.right.' + this.props.wgtId)
       .data(females);
     
     // Show data
     barLeft.enter().append('rect')
-      .attr('class', 'bar left')
+      .attr('class', 'bar left ' + this.props.wgtId)
       .attr('x', 0)
       .style("fill", "#a6cee3")
       .style("stroke-width", 1)
@@ -160,7 +160,7 @@ class D3Pyramid extends React.Component {
       .attr('height', yScale.rangeBand());
 
     barRight.enter().append('rect')
-      .attr('class', 'bar right')
+      .attr('class', 'bar right ' + this.props.wgtId)
       .attr('x', 0)
       .style("fill", "#fb9a99")
       .style("stroke-width", 1)

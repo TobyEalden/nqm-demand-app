@@ -4,64 +4,100 @@ class TimelineWidget extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
-   
-    this.props.update(this.props.wgtId, this.props.options, this.props.filter);
+    this.state = {
+      width: 445,
+      height: 225,
+      margin: {
+        top: 10,
+        right: 10,
+        bottom: 15,
+        left: 25,
+      }
+    };
   }
 
-  setFilter(_filter) {
-    this.props.update(this.props.wgtId, this.props.options, _filter);
+  translation(x,y) {
+    return 'translate(' + x + ',' + y + ')';
   }
 
-  setOptions(_options) {
-    this.props.update(this.props.wgtId, _options, this.props.filter);
+  componentDidMount() {
+    let svg = d3.select("#timeline" + this.props.wgtId)
+      .attr('width', this.state.margin.left + this.state.width + this.state.margin.right)
+      .attr('height', this.state.margin.top + this.state.height + this.state.margin.bottom)
+      .append('g')
+      .attr('transform', this.translation(this.state.margin.left, this.state.margin.top));
+    svg.append("g")
+      .attr('id', 'y-axis' + this.props.wgtId)
+      .attr("class", "axis")
+      .attr('transform', this.translation(this.state.margin.left, 0));
+    svg.append('g')
+      .attr('id', 'x-axis' + this.props.wgtId)
+      .attr("class", "axis")
+      .attr('transform', this.translation(this.state.margin.left, this.state.height));
+    svg.append("path")
+      .attr("id", "line" + this.props.wgtId);
+
   }
-
-
   componentWillReceiveProps(nextProps) {
 
+    let svg = d3.select("#timeline" + this.props.wgtId);
+
     let data = {};
-    let minYear = 3000;
-    let maxYear = 0;
-    let maxPersons = 0;
+
     _.forEach(nextProps.data, function(d) {
       if (data[d.year]) data[d.year].total += d.persons;
       else data[d.year] = {
-        year: d.year,
+        year: parseInt(d.year),
         total: d.persons
       }
-      if (d.year < minYear) minYear = d.year;
-      if (d.year > maxYear) maxYear = d.year;
-      if (d.persons > maxPersons) maxPersons = d.persons;
     })
 
-    d3.select('#timeline-svg').remove();
+    let totals = [];
+    _.forEach(data, function(d) {
+      totals.push(d);
+    });
 
-    let margin = {top: 20, right: 20, bottom: 30, left: 50};
-    let width = 600 - margin.left - margin.right;
-    let height = 400 - margin.top - margin.bottom;
+    totals.sort(function(a,b) {
+      return a.year - b.year;
+    });
 
-    let svg = d3.select("#timeline").append("svg")
-        .attr("id", "timeline-svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g");
-    
+    let xScale = d3.scale.linear()
+      .domain(d3.extent(totals, function(d) {return d.year}))
+      .range([0, this.state.width]);
 
-    let xScale = d3.scale.linear().range([margin.left, width - margin.right]).domain([minYear,maxYear]);
-    let yScale = d3.scale.linear().range([height - margin.top, margin.bottom]).domain([0,maxPersons]);
+    let yScale = d3.scale.linear()
+      .domain(d3.extent(totals, function(d) {return d.total}))
+      .range([this.state.height, 0]);
+
     let xAxis = d3.svg.axis()
-        .scale(xScale);
+      .scale(xScale)
+      .orient("bottom")
+      .ticks(7, ",f");
+    
     let yAxis = d3.svg.axis()
-        .scale(yScale)
-        .orient("left");
-      
-    svg.append("g")
-         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+      .scale(yScale)
+      .orient("left")
+      .ticks(5, ",f");
+    
+    let line = d3.svg.line()
+      .x(function(d) { return xScale(d.year); })
+      .y(function(d) { return yScale(d.total); });
+
+
+    svg.select("#x-axis" + this.props.wgtId)
         .call(xAxis);
-    svg.append("g")
-        .attr("transform", "translate(" + (margin.left) + ",0)")
+
+    svg.select("#y-axis" + this.props.wgtId)
         .call(yAxis);
+
+    svg.select("#line" + this.props.wgtId)
+      .datum(totals)
+      .transition()
+      .duration(500).ease("sin-in-out")
+      .attr("class", "line")
+      .attr("d", line)
+      .attr('transform', this.translation(this.state.margin.left, 0));
+
     
   }
 
@@ -69,7 +105,7 @@ class TimelineWidget extends React.Component {
 
     return (
       <div>
-        <div id="timeline"></div>
+        <svg id={"timeline" + this.props.wgtId}></svg>
 
       </div>
 
@@ -83,7 +119,6 @@ TimelineWidget.propTypes = {
   filter: React.PropTypes.object.isRequired,
   options: React.PropTypes.object.isRequired,
   wgtId: React.PropTypes.string.isRequired,
-  update: React.PropTypes.func
 };
 
 export default TimelineWidget;

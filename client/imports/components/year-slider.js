@@ -1,6 +1,7 @@
 import React from 'react';
 import Slider from 'material-ui/Slider';
 
+
 /**
  * The slider bar can have a set minimum and maximum, and the value can be
  * obtained through the value parameter fired on an onChange event.
@@ -23,11 +24,19 @@ class YearSlider extends React.Component {
   render() {
     const styles = {
       slider: {
-        width: "49%"
+        position: "relative",
+      },
+      span: {
+        fontFamily: "Roboto, sans-serif",     
+      },
+      div: {
+        position: "relative",
+        width: "49%",
+        textAlign: "center"
       }
     }
     return (
-      <div>
+      <div style={styles.div}>
         <Slider
           defaultValue={2015}
           min={2015}
@@ -37,7 +46,8 @@ class YearSlider extends React.Component {
           onChange={this.handleSlider}
           style={styles.slider}
         />
-        <strong>{this.state.currentYear}</strong>
+        <span style={styles.span}>{this.state.currentYear}</span>
+
       </div>
     );
   }
