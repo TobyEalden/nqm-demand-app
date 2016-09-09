@@ -1,5 +1,6 @@
 import React from "react";
 import YearSlider from "./year-slider";
+import MapToggle from "./map-toggle";
 
 class Map extends React.Component {
 
@@ -8,6 +9,7 @@ class Map extends React.Component {
     this.state = {};
     this.updateRegion = this.updateRegion.bind(this);
     this.setYear = this.setYear.bind(this);
+    this.setMode = this.setMode.bind(this);
   }
 
   updateRegion(e) {
@@ -27,8 +29,17 @@ class Map extends React.Component {
 
   setYear(year) {
     let filter = _.clone(this.props.filter);
-    filter.year = {"$eq":year.toString()};
+    this.props.delta ? filter.year = {"$in": [new Date().getFullYear().toString(), year.toString()]} : filter.year = {"$eq":year.toString()};
     this.props.update(this.props.wgtId, this.props.options, filter);
+  }
+
+  setMode() {
+    let filter = _.clone(this.props.filter);
+    const year = new Date().getFullYear().toString();
+    this.props.delta ? filter.year = {"$eq":year} : filter.year = {"$in": [year, year]};
+    let delta = true;
+    if (this.props.delta) delta = false;
+    this.props.setMode(this.props.wgtId, delta, filter);
   }
 
   componentDidMount() {  
@@ -45,32 +56,23 @@ class Map extends React.Component {
         accessToken: 'pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA'
     }).addTo(map);
       
-    let currentLayer = L.geoJson(this.props.geoData, {
-      style: this.style.bind(this),
-      onEachFeature: this.onEachFeature.bind(this)
-    });
-    map.addLayer(currentLayer);
-
     this.setState({ // Shouldn't really set state in componentDidMount...
-      map: map,
-      currentLayer: currentLayer
+      map: map
     });
     
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state.map.removeLayer(this.state.currentLayer);
+  componentDidUpdate() {
+    this.state.map.eachLayer(function (layer) {
+      if (!layer._bgBuffer)this.state.map.removeLayer(layer);
+    }.bind(this));
+    L.geoJson(this.props.geoData, {
+        style: this.style.bind(this),
+        onEachFeature: this.onEachFeature.bind(this)
+    }).addTo(this.state.map);
 
-    let currentLayer = L.geoJson(nextProps.geoData, {
-      style: this.style.bind(this),
-      onEachFeature: this.onEachFeature.bind(this)
-    });
-    this.state.map.addLayer(currentLayer);
-
-    this.setState({
-      currentLayer: currentLayer
-    });
   }
+
 
 
   render() {
@@ -85,6 +87,7 @@ class Map extends React.Component {
         <div id="map" style={styles.map}>
         </div>
         <YearSlider update={this.setYear}/>
+        <MapToggle toggle={this.setMode}/>
       </div>
     )
   }
@@ -99,7 +102,9 @@ Map.propTypes = {
   data: React.PropTypes.array, 
   update: React.PropTypes.func,
   centre: React.PropTypes.object,
-  heat: React.PropTypes.func
+  heat: React.PropTypes.func,
+  delta: React.PropTypes.bool,
+  setMode: React.PropTypes.func
 };
 
 export default Map;

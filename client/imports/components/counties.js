@@ -19,7 +19,8 @@ class Counties extends React.Component {
     widgets.map = { 
       centre: centre,
       options: {limit: 2500},
-      dataId: Meteor.settings.public.populationData
+      dataId: Meteor.settings.public.populationData,
+      delta: false
     }
     FlowRouter.go("demand", {region: region}, {widgets: JSON.stringify(widgets)});
   }

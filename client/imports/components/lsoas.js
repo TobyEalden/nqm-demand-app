@@ -6,6 +6,8 @@ import PyramidWidget from "../containers/pyramid-container";
 import TimelineWidget from "../containers/timeline-container";
 import MapWidget from "../containers/map-container";
 
+import { popDensity, popDelta } from "../functions/heat-maps";
+
 class Lsoa extends React.Component {
 
   constructor(props) {
@@ -13,6 +15,7 @@ class Lsoa extends React.Component {
     // Bind event handlers to "this"
     this.updateSettings = this.updateSettings.bind(this);
     this.updateLsoa = this.updateLsoa.bind(this);
+    this.updateMapMode = this.updateMapMode.bind(this);
   }
 
   updateLsoa(lsoa) {
@@ -31,27 +34,12 @@ class Lsoa extends React.Component {
     FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
 
-  popDensity(feature) { // Styling function, can this be moved externally
-
-    let population = _.find(this.data, function (poplet) {
-      if (poplet.area_id == feature.properties.LSOA11CD) return true;
-      else return false;
-    });
-    
-    let d = population.persons/feature.properties.area;
-    let heat =  d > 0.014   ? "#800026" : 
-                d > 0.01    ? "#bd0026" :    
-                d > 0.005   ? "#e31a1c" :
-                d > 0.001   ? "#fc4e2a" :
-                d > 0.0005  ? "#fd8d3c" :
-                d > 0.0001  ? "#feb24c" :
-                d > 0.00008 ? "#fed976" :
-                d > 0.00005 ? "#4292c6":
-                d > 0.00003 ? "#2171b5" :
-                d > 0.00001 ? "#08519c" :
-                            "#08306b";
-    return {fillColor: heat, color: '#FF0000', weight: 1, fillOpacity: 0.5};
-
+  updateMapMode(wgtId, deltaEnable, filter) {
+    let widgets = _.clone(this.props.widgets);
+    widgets[wgtId] = widgets[wgtId] ? widgets[wgtId] : {};
+    widgets[wgtId].delta = deltaEnable;
+    widgets[wgtId].filter = filter;
+    FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)}); 
   }
 
   render() {
@@ -67,7 +55,7 @@ class Lsoa extends React.Component {
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={widgets.map.dataId} mapFilter={mapFilter} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this.updateLsoa} update={this.updateSettings} heat={this.popDensity}/>      
+          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={widgets.map.dataId} mapFilter={mapFilter} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this.updateLsoa} update={this.updateSettings} delta={widgets.map.delta} heat={widgets.map.delta ? popDelta : popDensity} setMode={this.updateMapMode}/>      
         </Panel>  
         <Panel>
 
