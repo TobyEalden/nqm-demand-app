@@ -119,8 +119,6 @@ class TimelineWidget extends React.Component {
 
 TimelineWidget.propTypes = {
   data: React.PropTypes.array.isRequired,
-  filter: React.PropTypes.object.isRequired,
-  options: React.PropTypes.object.isRequired,
   wgtId: React.PropTypes.string.isRequired,
 };
 

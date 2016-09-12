@@ -30,3 +30,8 @@ input:-webkit-autofill:focus {
   stroke: steelblue;
   stroke-width: 1.5px;
 }
+
+.leaflet-container {
+    height: 600px;
+    width: 700px;
+}

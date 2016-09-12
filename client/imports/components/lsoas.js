@@ -5,6 +5,7 @@ import Panel from "./panel";
 import PyramidWidget from "../containers/pyramid-container";
 import TimelineWidget from "../containers/timeline-container";
 import MapWidget from "../containers/map-container";
+import YearSlider from "./year-slider";
 
 import { popDensity, popDelta } from "../functions/heat-maps";
 
@@ -16,7 +17,9 @@ class Lsoa extends React.Component {
     this.updateSettings = this.updateSettings.bind(this);
     this.updateLsoa = this.updateLsoa.bind(this);
     this.updateMapMode = this.updateMapMode.bind(this);
+    this.setYear = this.setYear.bind(this);
   }
+
 
   updateLsoa(lsoa) {
     let widgets = _.clone(this.props.widgets);
@@ -24,6 +27,13 @@ class Lsoa extends React.Component {
       if (wgt != widgets.map) wgt.filter.area_id = {"$eq":lsoa};
     });
     FlowRouter.go("demand", {region: this.props.region, lsoa: lsoa}, {widgets: JSON.stringify(widgets)});
+  }
+
+  setYear(year) {
+    let widgets = _.clone(this.props.widgets);
+    widgets.map.filter.year["$in"][1] = year.toString();
+    widgets.pyramid.filter.year[$eq] = year.toString();
+    FlowRouter.go("demand", {region: this.props.region, lsoa: this.props.lsoa}, {widgets: JSON.stringify(widgets)});
   }
 
   updateSettings(wgtId, options, filter) { // Basic function to update widget settings
@@ -44,22 +54,20 @@ class Lsoa extends React.Component {
 
   render() {
     // Some default filters
-    const pyramidFilter = {"area_id":{"$eq":this.props.lsoa}, "year":{"$eq":"2015"}};
-    const timelineFilter = {"area_id":{"$eq":this.props.lsoa}, "age_band":{"$eq":"All Ages"}}; 
-    const mapFilter = {"properties.LSOA11CD":{"$in":this.props.lsoas}};
-    const mapDataFilter = {"area_id":{"$in":this.props.lsoas}, "year":{"$eq":"2015"}, "age_band":{"$eq":"All Ages"}};
+
 
     const widgets = this.props.widgets;
 
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={widgets.map.dataId} mapFilter={mapFilter} filter={widgets.map.filter ? widgets.map.filter : mapDataFilter} options={widgets.map ? widgets.map.options : {limit: 1000}} centre={widgets.map.centre} updateRegion={this.updateLsoa} update={this.updateSettings} delta={widgets.map.delta} heat={widgets.map.delta ? popDelta : popDensity} setMode={this.updateMapMode}/>      
+          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter} options={widgets.map.options} centre={widgets.map.centre} updateRegion={this.updateLsoa} update={this.updateSettings} delta={widgets.map.delta} heat={widgets.map.delta ? popDelta : popDensity} setMode={this.updateMapMode}/>      
+          <YearSlider update={this.setYear}/>
         </Panel>  
         <Panel>
 
-          <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid ? widgets.pyramid.filter : pyramidFilter} options={widgets.pyramid ? widgets.pyramid.options : {limit: 1000}} update={this.updateSettings} />
-          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} filter={widgets.timeline ? widgets.timeline.filter : timelineFilter} options={widgets.timeline ? widgets.timeline.options : {limit: 1000}} update={this.updateSettings} />
+          <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} update={this.updateSettings} />
+          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} filter={widgets.timeline.filter} options={widgets.timeline.options} update={this.updateSettings} />
         </Panel>
       </div>
     );

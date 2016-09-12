@@ -16,14 +16,14 @@ class MapToggle extends React.Component {
     }
     return (
       <div style={styles.div}>
-        <Toggle label="Population Deltas" onToggle={this.props.toggle}/>
+        <Toggle label="Population Deltas" onToggle={this.props.update}/>
       </div>
     );
   }
 }
 
 MapToggle.propTypes = {
-  toggle: React.PropTypes.func
+  update: React.PropTypes.func
 }
 
 export default MapToggle;

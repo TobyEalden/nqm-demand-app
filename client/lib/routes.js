@@ -4,7 +4,7 @@ import {FlowRouter} from "meteor/kadira:flow-router";
 
 import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
-import Demand from "../imports/components/demand";
+import DemandApp from "../imports/containers/demand-container";
 import Counties from "../imports/components/counties";
 
 
@@ -31,11 +31,11 @@ FlowRouter.route("/", {
 });
 
 // A county and/or lsoa has been selected, widget parameters are saved on url and passed in to the Demand component
-FlowRouter.route("/demand/:region/:lsoa?", {
+FlowRouter.route("/demand/:region?", {
   name: "demand",
-  action: function(params, queryParams) {    
-    const widgets = queryParams.widgets ? JSON.parse(queryParams.widgets) : {};
-    mount(Layout, { content: function() { return <Demand widgets={widgets} region={params.region} lsoa={params.lsoa} />; } });
+  action: function(params, queryParams) {
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)}/>; } });
   }
 });
 

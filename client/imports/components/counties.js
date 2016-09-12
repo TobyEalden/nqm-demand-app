@@ -14,15 +14,8 @@ class Counties extends React.Component {
   }
 
   updateRegion(region, centre) {
-    // Pass in the basic options to the demand app, such as region and map zoom location
-    let widgets = {};
-    widgets.map = { 
-      centre: centre,
-      options: {limit: 2500},
-      dataId: Meteor.settings.public.populationData,
-      delta: false
-    }
-    FlowRouter.go("demand", {region: region}, {widgets: JSON.stringify(widgets)});
+    // Pass in the basic options to the demand app, such as region and map zoom location  
+    FlowRouter.go("demand", {region: region}, {centre: JSON.stringify(centre)});
   }
 
   render() {

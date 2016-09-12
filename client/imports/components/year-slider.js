@@ -11,9 +11,9 @@ class YearSlider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentYear: 2015,
+      currentYear: new Date().getFullYear()
     }
-    this.handleSlider = this.handleSlider.bind(this);
+    this.handleSlider = _.debounce(this.handleSlider.bind(this), 1000);
   }
   
   handleSlider(event, value) {
@@ -38,7 +38,7 @@ class YearSlider extends React.Component {
     return (
       <div style={styles.div}>
         <Slider
-          defaultValue={2015}
+          defaultValue={this.state.currentYear}
           min={2015}
           max={2021}
           step={1}

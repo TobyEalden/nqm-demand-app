@@ -1,110 +1,68 @@
 import React from "react";
-import YearSlider from "./year-slider";
-import MapToggle from "./map-toggle";
 
-class Map extends React.Component {
+import { popDensity, popDelta } from "../functions/heat-maps";
+import { Map, Marker, Popup, TileLayer, GeoJson } from 'react-leaflet';
+
+class MapWgt extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {};
-    this.updateRegion = this.updateRegion.bind(this);
-    this.setYear = this.setYear.bind(this);
-    this.setMode = this.setMode.bind(this);
+    this.setLsoa = this.setLsoa.bind(this);
+
   }
 
-  updateRegion(e) {
-    this.state.map.fitBounds(e.target.getBounds());
-    this.props.updateRegion(e.target.feature.properties.LSOA11CD);
+  setLsoa(e) {
+    this.props.update(e.target.feature.properties.LSOA11CD);
   }
 
   onEachFeature(feature, layer) {
     layer.on({
-      click: this.updateRegion
+      click: this.setLsoa
     });
   }
 
   style(feature) {
-    return this.props.heat(feature);
+    return this.props.delta ? popDelta(feature, this.props) : popDensity(feature, this.props);
   }
 
-  setYear(year) {
-    let filter = _.clone(this.props.filter);
-    this.props.delta ? filter.year = {"$in": [new Date().getFullYear().toString(), year.toString()]} : filter.year = {"$eq":year.toString()};
-    this.props.update(this.props.wgtId, this.props.options, filter);
-  }
+  shouldComponentUpdate(nextProps, nextState) {
 
-  setMode() {
-    let filter = _.clone(this.props.filter);
-    const year = new Date().getFullYear().toString();
-    this.props.delta ? filter.year = {"$eq":year} : filter.year = {"$in": [year, year]};
-    let delta = true;
-    if (this.props.delta) delta = false;
-    this.props.setMode(this.props.wgtId, delta, filter);
-  }
-
-  componentDidMount() {  
-
-    let map = L.map('map', {
-        center: [this.props.centre.lat, this.props.centre.lng],
-        zoom: 9
-    });   
-
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
-        id: 'nqmivan.12id4bh0',
-        accessToken: 'pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA'
-    }).addTo(map);
-      
-    this.setState({ // Shouldn't really set state in componentDidMount...
-      map: map
-    });
-    
-  }
-
-  componentDidUpdate() {
-    this.state.map.eachLayer(function (layer) {
-      if (!layer._bgBuffer)this.state.map.removeLayer(layer);
-    }.bind(this));
-    L.geoJson(this.props.geoData, {
-        style: this.style.bind(this),
-        onEachFeature: this.onEachFeature.bind(this)
-    }).addTo(this.state.map);
+    if (nextProps.data[nextProps.data.length - 1] == this.props.data[this.props.data.length - 1] && nextProps.delta == this.props.delta) return false;
+    else return true;
 
   }
-
-
 
   render() {
-    const styles = {
-      map: {
-        height: "600px",
-        width: "700px"
-      }
-    }
+
+    const accessToken = "pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA";
+    const id = "nqmivan.12id4bh0";
+    const url = "https://api.tiles.mapbox.com/v4/" + id + "/{z}/{x}/{y}.png?access_token=" + accessToken;
     return (
-      <div>
-        <div id="map" style={styles.map}>
-        </div>
-        <YearSlider update={this.setYear}/>
-        <MapToggle toggle={this.setMode}/>
-      </div>
+
+        <Map center={this.props.centre} zoom={9}>
+          <TileLayer
+            url={url}
+            attribution='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
+          />
+          <GeoJson
+            data={this.props.geoData}
+            style={this.style.bind(this)}
+            onEachFeature={this.onEachFeature.bind(this)}
+          />
+        </Map>
+
     )
   }
 }
 
-Map.propTypes = {
-  geoData: React.PropTypes.array.isRequired,
-  updateRegion: React.PropTypes.func.isRequired,
+MapWgt.propTypes = {
   wgtId: React.PropTypes.string.isRequired,
-  filter: React.PropTypes.object.isRequired,
-  options: React.PropTypes.object.isRequired,
-  data: React.PropTypes.array, 
-  update: React.PropTypes.func,
+  geoData: React.PropTypes.array.isRequired,
+  data: React.PropTypes.array.isRequired,
+  update: React.PropTypes.func.isRequired,
   centre: React.PropTypes.object,
-  heat: React.PropTypes.func,
-  delta: React.PropTypes.bool,
-  setMode: React.PropTypes.func
+  delta: React.PropTypes.bool.isRequired,
 };
 
-export default Map;
+export default MapWgt;

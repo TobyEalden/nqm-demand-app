@@ -1,9 +1,9 @@
-function popDensity(feature) { // Styling function, can this be moved externally
+function popDensity(feature, props) { // Styling function, can this be moved externally
 
-  const population = _.find(this.data, function (poplet) {
-    if (poplet.area_id == feature.properties.LSOA11CD) return true;
+  const population = _.find(props.data, function (poplet) {
+    if (poplet.area_id == feature.properties.LSOA11CD && poplet.year == this.filter.year["$in"][1]) return true;
     else return false;
-  });
+  }.bind(props));
   
   let d = population.persons/feature.properties.area;
   let heat =  d > 0.014   ? "#800026" : 
@@ -21,19 +21,18 @@ function popDensity(feature) { // Styling function, can this be moved externally
 
 }
 
-function popDelta(feature) {
+function popDelta(feature, props) {
 
-  const originalPop = _.find(this.data, function (poplet) {
+  const originalPop = _.find(props.data, function (poplet) {
     if (poplet.year == this.filter.year["$in"][0] && poplet.area_id == feature.properties.LSOA11CD) return true;
     else return false;
-  }.bind(this));
+  }.bind(props));
 
-  const newPop = _.find(this.data, function (poplet) {
+  const newPop = _.find(props.data, function (poplet) {
     if (poplet.year == this.filter.year["$in"][1] && poplet.area_id == feature.properties.LSOA11CD) return true;
     else return false;
-  }.bind(this));
+  }.bind(props));
 
-  if (!originalPop || !newPop) return {color: "#FF0000", weight: 1, fillOpacity: 0.0};
   const delta = newPop.persons - originalPop.persons;
   
   let heat =  delta > 200   ? "#800026" : 
