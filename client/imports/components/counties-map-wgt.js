@@ -1,4 +1,5 @@
 import React from "react";
+import { Map, Marker, Popup, TileLayer, GeoJson } from 'react-leaflet';
 import CountyDetails from "./county-details";
 
 class CountiesMap extends React.Component {
@@ -44,37 +45,20 @@ class CountiesMap extends React.Component {
     });
   }
 
-  componentDidMount() { // This map is static, it does not expect to update once drawn
-    let map = L.map('map', {
-        center: [53, -3],
-        zoom: 6
-    });    
-    L.tileLayer('', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
-        id: 'nqmivan.12id4bh0',
-        accessToken: 'pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA'
-    }).addTo(map);
-      
-    let currentLayer = L.geoJson(this.props.geoData, {
-      style: {color: '#FF0000', weight: 1, opacity: 0.5},
-      onEachFeature: this.onEachFeature
-    });
-    map.addLayer(currentLayer);
-  }
 
   render() {
-    const styles = {
-      map: {
-        height: "600px",
-        width: "700px"
-      }
-    }
+
 
     return (
       <div>
-        <div id="map" style={styles.map}>
-        </div>
+        <Map center={[53, -3]} zoom={6}>
+   
+          <GeoJson
+            data={this.props.geoData}
+            style={{color: '#FF0000', weight: 1, opacity: 0.5}}
+            onEachFeature={this.onEachFeature.bind(this)}
+          />
+        </Map>
         <CountyDetails name={this.state.name} />
       </div>
     )

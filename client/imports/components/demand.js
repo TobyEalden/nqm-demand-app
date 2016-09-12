@@ -36,7 +36,9 @@ class Demand extends React.Component {
               "$eq":"All Ages"
             }
           },
-          options: {limit: 2500},
+          options: {
+            limit: 2500
+          },
           settings: {
             delta: false
           }
@@ -50,7 +52,9 @@ class Demand extends React.Component {
               "$eq": new Date().getFullYear().toString()
             }
           },
-          options: {limit: 1000},
+          options: {
+            limit: 1000
+          },
           settings: {
           }
         },
@@ -69,7 +73,7 @@ class Demand extends React.Component {
           settings: {
           }
         }
-      },
+      }
     };
 
   }
