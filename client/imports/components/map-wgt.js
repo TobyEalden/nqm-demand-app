@@ -13,7 +13,11 @@ class MapWgt extends React.Component {
   }
 
   setLsoa(e) {
-    this.props.update(e.target.feature.properties.LSOA11CD);
+    const population = _.find(this.props.data, function (poplet) {
+      if (poplet.area_id == e.target.feature.properties.LSOA11CD && poplet.year == this.props.filter.year["$in"][1]) return true;
+      else return false;
+    }.bind(this));
+    this.props.update(e.target.feature.properties.LSOA11CD, e.target.feature.properties.LSOA11NM, population.persons, e.target.feature.properties.area);
   }
 
   onEachFeature(feature, layer) {

@@ -4,6 +4,7 @@ import {Meteor} from "meteor/meteor";
 import MapWidget from "../containers/map-container";
 import PyramidWidget from "../containers/pyramid-container";
 import TimelineWidget from "../containers/timeline-container";
+import LsoaDetails from "./lsoa-details";
 import YearSlider from "./year-slider";
 import MapToggle from "./map-toggle";
 import Panel from "./panel";
@@ -73,6 +74,12 @@ class Demand extends React.Component {
           settings: {
           }
         }
+      },
+      lsoa: {
+        id: "",
+        name: "",
+        population: 0,
+        area: 0
       }
     };
 
@@ -87,12 +94,18 @@ class Demand extends React.Component {
     });
   }
 
-  setLsoa(lsoa) {
+  setLsoa(id, name, population, area) {
     let widgets = _.cloneDeep(this.state.widgets);
-    widgets.pyramid.filter.area_id["$eq"] = lsoa;
-    widgets.timeline.filter.area_id["$eq"] = lsoa;
+    widgets.pyramid.filter.area_id["$eq"] = id;
+    widgets.timeline.filter.area_id["$eq"] = id;
+    let lsoa = _.clone(this.state.lsoa);
+    lsoa.id = id;
+    lsoa.name = name;
+    lsoa.population = population;
+    lsoa.area = area;
     this.setState({
-      widgets: widgets
+      widgets: widgets,
+      lsoa: lsoa
     });
   }
 
@@ -116,6 +129,7 @@ class Demand extends React.Component {
           <MapToggle update={this.toggleMapMode} />
         </Panel>
         <Panel>
+          <LsoaDetails name={this.state.lsoa.name} id={this.state.lsoa.id} population={this.state.lsoa.population} area={this.state.lsoa.area} />
           <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid.filter} options={widgets.pyramid.options}  />
           <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} filter={widgets.timeline.filter} options={widgets.timeline.options} />
         </Panel>
