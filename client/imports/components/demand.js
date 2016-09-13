@@ -26,22 +26,21 @@ class Demand extends React.Component {
           filter: {
             "area_id": {
               "$in":props.lsoas
-            }, 
-            "year": {
-              "$in": [
-                new Date().getFullYear().toString(),
-                new Date().getFullYear().toString()
-              ]
             },
             "age_band": {
               "$eq":"All Ages"
             }
           },
           options: {
+            sort: {area_id:-1, year: -1},
             limit: 2500
           },
           settings: {
-            delta: false
+            delta: false,
+            year: [
+              new Date().getFullYear().toString(),
+              new Date().getFullYear().toString()
+            ]
           }
         },
         pyramid: {
@@ -87,7 +86,7 @@ class Demand extends React.Component {
 
   setYear(year) {
     let widgets = _.cloneDeep(this.state.widgets);
-    widgets.map.filter.year["$in"][1] = year.toString();
+    widgets.map.settings.year[1] = year.toString();
     widgets.pyramid.filter.year["$eq"] = year.toString();
     this.setState({
       widgets: widgets
@@ -124,7 +123,7 @@ class Demand extends React.Component {
     return (
       <div>
         <Panel>
-          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} delta={widgets.map.settings.delta} />
+          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.lsoas}}} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} settings={widgets.map.settings} />
           <YearSlider update={this.setYear}/>
           <MapToggle update={this.toggleMapMode} />
         </Panel>

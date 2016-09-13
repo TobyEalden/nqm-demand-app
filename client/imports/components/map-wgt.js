@@ -1,20 +1,25 @@
 import React from "react";
 
 import { popDensity, popDelta } from "../functions/heat-maps";
+import { mapKey } from "../functions/map-key";
 import { Map, Marker, Popup, TileLayer, GeoJson } from 'react-leaflet';
+
+_ = lodash;
 
 class MapWgt extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    
     this.setLsoa = this.setLsoa.bind(this);
+
+    this.state = mapKey(props.data, props.geoData);
 
   }
 
   setLsoa(e) {
     const population = _.find(this.props.data, function (poplet) {
-      if (poplet.area_id == e.target.feature.properties.LSOA11CD && poplet.year == this.props.filter.year["$in"][1]) return true;
+      if (poplet.area_id == e.target.feature.properties.LSOA11CD && poplet.year == this.props.settings.year[1]) return true;
       else return false;
     }.bind(this));
     this.props.update(e.target.feature.properties.LSOA11CD, e.target.feature.properties.LSOA11NM, population.persons, e.target.feature.properties.area);
@@ -27,15 +32,20 @@ class MapWgt extends React.Component {
   }
 
   style(feature) {
-    return this.props.delta ? popDelta(feature, this.props) : popDensity(feature, this.props);
+    return this.props.settings.delta ? popDelta(feature, this.props, this.state.deltaKey) : popDensity(feature, this.props, this.state.densityKey);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
 
-    if (nextProps.data[nextProps.data.length - 1] == this.props.data[this.props.data.length - 1] && nextProps.delta == this.props.delta) return false;
-    else return true;
-
+    if (nextProps.settings.year[1] == this.props.settings.year[1] && nextProps.settings.delta == this.props.settings.delta) return false;
+    else {
+      
+      this.setState(mapKey(nextProps.data, nextProps.geoData));
+      
+      return true;
+    }
   }
+
 
   render() {
 
@@ -66,7 +76,7 @@ MapWgt.propTypes = {
   data: React.PropTypes.array.isRequired,
   update: React.PropTypes.func.isRequired,
   centre: React.PropTypes.object,
-  delta: React.PropTypes.bool.isRequired,
+  settings: React.PropTypes.object.isRequired,
 };
 
 export default MapWgt;

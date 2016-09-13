@@ -35,9 +35,18 @@ FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)}/>; } });
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} /> ; } });
   }
 });
+
+// A county and/or lsoa has been selected, widget parameters are saved on url and passed in to the Demand component
+/*FlowRouter.route("/demand/:region/:year/:lsoa/:?", {
+  name: "demand",
+  action: function(params, queryParams) {
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} /> ; } });
+  }
+});*/
 
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 
