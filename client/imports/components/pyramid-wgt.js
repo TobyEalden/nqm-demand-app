@@ -1,11 +1,13 @@
 import React from "react";
 
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
 class PyramidWidget extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      width: 400,
+      width: 280,
       height: 250,
       margin: {
         top: 20,
@@ -14,9 +16,9 @@ class PyramidWidget extends React.Component {
         left: 20,
         middle: 28
       },
-      regionWidth:  172, // width/2 - margin.middle
-      pointA: 172, // regionwidth
-      pointB: 228 // width - regionwidth
+      regionWidth:  112, // width/2 - margin.middle
+      pointA: 112, // regionwidth
+      pointB: 168 // width - regionwidth
     };
    
   }
@@ -156,6 +158,10 @@ class PyramidWidget extends React.Component {
     barLeft.transition()
       .duration(500).ease("sin-in-out")
       .attr('y', function(d) { return yScale(d.age_band); })
+      .style("opacity", function(d) {
+        if(nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
+        else return 0.5;
+      })
       .attr('width', function(d) { return xScaleRight(d.persons);})
       .attr('height', yScale.rangeBand());
 
@@ -169,6 +175,10 @@ class PyramidWidget extends React.Component {
     barRight.transition()
       .duration(500).ease("sin-in-out")
       .attr('y', function(d) { return yScale(d.age_band); })
+      .style("opacity", function(d) {
+        if(nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
+        else return 0.5;
+      })
       .attr('width', function(d) { return xScaleRight(d.persons); })
       .attr('height', yScale.rangeBand());
   
@@ -177,7 +187,9 @@ class PyramidWidget extends React.Component {
   render() {
 
     return (
+      <Card className="wgt-card">
         <svg id={"pyramid" + this.props.wgtId}></svg>
+      </Card>
     );
   }
 
@@ -186,6 +198,7 @@ class PyramidWidget extends React.Component {
 PyramidWidget.propTypes = {
   data: React.PropTypes.array.isRequired,
   wgtId: React.PropTypes.string.isRequired,
+  settings: React.PropTypes.object.isRequired,
 };
 
 export default PyramidWidget;

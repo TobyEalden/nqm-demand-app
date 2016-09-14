@@ -1,11 +1,13 @@
 import React from "react";
 
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
 class TimelineWidget extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      width: 445,
+      width: 260,
       height: 225,
       margin: {
         top: 10,
@@ -45,10 +47,12 @@ class TimelineWidget extends React.Component {
     let data = {};
     // There is almost certainly a better way of doing this, need to get totals for each year.
     _.forEach(nextProps.data, function(d) { 
-      if (data[d.year]) data[d.year].total += d.persons;
-      else data[d.year] = {
-        year: parseInt(d.year),
-        total: d.persons
+      if (nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) {
+        if (data[d.year]) data[d.year].total += d.persons;
+        else data[d.year] = {
+          year: parseInt(d.year),
+          total: d.persons
+        }
       }
     })
 
@@ -66,7 +70,7 @@ class TimelineWidget extends React.Component {
       .range([0, this.state.width]);
 
     let yScale = d3.scale.linear()
-      .domain([0, d3.max(totals, function(d) {return d.total})])
+      .domain([0, d3.max(totals, function(d) {return d.total}) * 1.1])
       .range([this.state.height, 0]);
 
     let xAxis = d3.svg.axis()
@@ -78,7 +82,7 @@ class TimelineWidget extends React.Component {
     let yAxis = d3.svg.axis()
       .scale(yScale)
       .orient("left")
-      .ticks(5, ",f");
+      .ticks(6, ",f");
     
     let line = d3.svg.line()
       .x(function(d) { return xScale(d.year); })
@@ -107,10 +111,10 @@ class TimelineWidget extends React.Component {
   render() {
 
     return (
-      <div>
+      <Card className="wgt-card">
         <svg id={"timeline" + this.props.wgtId}></svg>
 
-      </div>
+      </Card>
 
     );
   }
@@ -120,6 +124,7 @@ class TimelineWidget extends React.Component {
 TimelineWidget.propTypes = {
   data: React.PropTypes.array.isRequired,
   wgtId: React.PropTypes.string.isRequired,
+  settings: React.PropTypes.object.isRequired
 };
 
 export default TimelineWidget;

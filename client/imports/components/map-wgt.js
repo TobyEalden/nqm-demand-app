@@ -13,16 +13,18 @@ class MapWgt extends React.Component {
     
     this.setLsoa = this.setLsoa.bind(this);
 
-    this.state = mapKey(props.data, props.geoData);
+    this.state = mapKey(props.data, props.geoData, props.settings.age_band["$in"].length);
 
   }
 
   setLsoa(e) {
-    const population = _.find(this.props.data, function (poplet) {
+
+    let index = _.findIndex(this.props.data, function (poplet) {
       if (poplet.area_id == e.target.feature.properties.LSOA11CD && poplet.year == this.props.settings.year[1]) return true;
       else return false;
     }.bind(this));
-    this.props.update(e.target.feature.properties.LSOA11CD, e.target.feature.properties.LSOA11NM, population.persons, e.target.feature.properties.area);
+    const population = this.props.data[index].persons + this.props.data[index+1].persons;
+    this.props.update(e.target.feature.properties.LSOA11CD, e.target.feature.properties.LSOA11NM, population, e.target.feature.properties.area);
   }
 
   onEachFeature(feature, layer) {
@@ -40,7 +42,7 @@ class MapWgt extends React.Component {
     if (nextProps.settings.year[1] == this.props.settings.year[1] && nextProps.settings.delta == this.props.settings.delta) return false;
     else {
       
-      this.setState(mapKey(nextProps.data, nextProps.geoData));
+      this.setState(mapKey(nextProps.data, nextProps.geoData, nextProps.settings.age_band["$in"].length));
       
       return true;
     }
@@ -77,6 +79,7 @@ MapWgt.propTypes = {
   update: React.PropTypes.func.isRequired,
   centre: React.PropTypes.object,
   settings: React.PropTypes.object.isRequired,
+  filter: React.PropTypes.object.isRequired
 };
 
 export default MapWgt;

@@ -5,17 +5,9 @@ class LsoaDetails extends React.Component {
   
 
   render() {
-    var styles = {
-      card: {
-        margin: 20,
-        padding: 20,
-        width: "60%",
-        position: "relative"
-      }
-   };
    if (this.props.name == "") return (<div></div>);
     return (
-      <Card style={styles.card}>
+      <Card className="wgt-card">
         <CardTitle title={this.props.name + " | " + this.props.id} />
         <CardText>
           Population: {this.props.population} | Area: {Math.floor(this.props.area/1000000)} km<sup>2</sup>

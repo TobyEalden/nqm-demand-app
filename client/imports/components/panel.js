@@ -3,13 +3,9 @@ import React from "react";
 class Panel extends React.Component { 
 
   render() {
-    const style = {
-      width: "49%",
-      float: "left",
-      position: "relative"
-    };
+
     return (
-      <div style={style}>
+      <div className="panel">
           {this.props.children}
       </div>
     );

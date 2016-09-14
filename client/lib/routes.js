@@ -5,6 +5,7 @@ import {FlowRouter} from "meteor/kadira:flow-router";
 import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
 import DemandApp from "../imports/containers/demand-container";
+import TableApp from "../imports/containers/table-container";
 import Counties from "../imports/components/counties";
 
 
@@ -18,7 +19,7 @@ FlowRouter.triggers.enter([function(context, redirect) {
   if (context.queryParams.access_token) {
     connectionManager.useToken(context.queryParams.access_token);
     // Redirect to root page after authentication.
-    redirect("/");
+  //  redirect("/");
   }
 }]);
 
@@ -48,6 +49,13 @@ FlowRouter.route("/demand/:region?", {
   }
 });*/
 
+FlowRouter.route("/tables/:region?", {
+  name: "tables",
+  action: function(params, queryParams) {
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
+    mount(Layout, { content: function() { return <TableApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline}  /> ; } });
+  }
+});
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 
 FlowRouter.route("/auth-server", {
