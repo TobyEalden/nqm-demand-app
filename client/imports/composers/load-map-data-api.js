@@ -7,9 +7,8 @@ function loadMapData({mapId, mapFilter, options}, onData) {
   const url = Meteor.settings.public.queryURL + "datasets/" + mapId + "/data";
   HTTP.call("GET", url, { headers: headers, params: { opts: JSON.stringify(options), filter: JSON.stringify(mapFilter) }}, function(err, response) {
     if (err) {
-      console.log("Failed to get data: ",err);
+      console.log("Failed to get data: ", err);
     } else {
-      console.log("Getting map data");
       onData(null, {geoData: response.data.data});
     }
   });

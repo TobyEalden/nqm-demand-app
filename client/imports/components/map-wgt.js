@@ -8,7 +8,7 @@ _ = lodash;
 
 class MapWgt extends React.Component {
 
-  /*constructor(props) {
+  constructor(props) {
     super(props);
     
     this.setLsoa = this.setLsoa.bind(this);
@@ -42,23 +42,16 @@ class MapWgt extends React.Component {
     return this.props.settings.delta ? popDelta(feature, this.props, this.state.deltaKey) : popDensity(feature, this.props, this.state.densityKey);
   }
 
-  /*shouldComponentUpdate(nextProps, nextState) {
-
-    if (nextProps.filter == this.props.filter && nextProps.settings.delta == this.props.settings.delta) return false;
-    else {
-      this.setState(mapKey(nextProps.data, nextProps.geoData));
-      
-      return true;
-    }
-  }*/
- /* componentWillReceiveProps(nextProps) {
-    console.log("receive props");
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.data === this.props.data) return false;
+    else return true;   
+  }
+  componentWillReceiveProps(nextProps) {
     this.setState(mapKey(nextProps.data, nextProps.geoData));
   }
 
 
   render() {
-    console.log("Render of Map");
 
     const accessToken = "pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA";
     const id = "nqmivan.12id4bh0";
@@ -78,11 +71,8 @@ class MapWgt extends React.Component {
         </Map>
 
     )
-  }*/
-  render() {
-    console.log("Render map");
-    return(<div></div>);
   }
+
 }
 
 MapWgt.propTypes = {

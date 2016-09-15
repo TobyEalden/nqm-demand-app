@@ -5,7 +5,7 @@ _ = lodash;
 function popDensity(feature, props, keyValues) { 
 
   const population = _.find(props.data, (poplet) => {
-    if (poplet._id == feature.properties.LSOA11CD && poplet.year[1] == props.filter.year["$in"][1]) return true;
+    if (poplet._id == feature.properties.LSOA11CD && poplet.year.indexOf(props.filter.year["$in"][1]) != -1) return true;
     else return false;
   }).persons;
   

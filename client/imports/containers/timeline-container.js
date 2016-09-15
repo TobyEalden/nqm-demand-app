@@ -1,6 +1,6 @@
 import {composeWithTracker} from "react-komposer";
 
-import loadData from "../composers/load-data-api";
+import loadData from "../composers/aggregate-poplets";
 import Timeline from "../components/timeline-wgt";
 import ProgressIndicator from "../components/progress-indicator";
 

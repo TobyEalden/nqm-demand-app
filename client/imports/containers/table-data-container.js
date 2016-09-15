@@ -1,6 +1,6 @@
 import {composeWithTracker} from "react-komposer";
 
-import loadData from "../composers/load-resource-data";
+import loadData from "../composers/aggregate-poplets";
 import TableData from "../components/table-data";
 import ProgressIndicator from "../components/progress-indicator";
 

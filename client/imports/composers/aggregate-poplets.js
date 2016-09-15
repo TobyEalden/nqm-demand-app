@@ -11,7 +11,6 @@ function loadAggregate({resourceId, pipeline}, onData) {
     if (err) {
       console.log("Failed to get data: ",err);
     } else {
-      console.log("Getting poplets");
       onData(null, {data: response.data.data});
     }
   });

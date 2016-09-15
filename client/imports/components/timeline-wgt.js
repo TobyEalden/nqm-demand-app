@@ -43,34 +43,19 @@ class TimelineWidget extends React.Component {
   componentWillReceiveProps(nextProps) {
 
     let svg = d3.select("#timeline" + this.props.wgtId);
+    
+  
 
-    let data = {};
-    // There is almost certainly a better way of doing this, need to get totals for each year.
-    _.forEach(nextProps.data, function(d) { 
-      if (nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) {
-        if (data[d.year]) data[d.year].total += d.persons;
-        else data[d.year] = {
-          year: parseInt(d.year),
-          total: d.persons
-        }
-      }
-    })
-
-    let totals = [];
-    _.forEach(data, function(d) {
-      totals.push(d);
-    });
-
-    totals.sort(function(a,b) {
-      return a.year - b.year;
+    nextProps.data.sort(function(a,b) {
+      return a._id - b._id;
     });
 
     let xScale = d3.scale.linear()
-      .domain(d3.extent(totals, function(d) {return d.year}))
+      .domain(d3.extent(nextProps.data, function(d) {return d._id}))
       .range([0, this.state.width]);
 
     let yScale = d3.scale.linear()
-      .domain([0, d3.max(totals, function(d) {return d.total}) * 1.1])
+      .domain([0, d3.max(nextProps.data, function(d) {return d.persons}) * 1.1])
       .range([this.state.height, 0]);
 
     let xAxis = d3.svg.axis()
@@ -85,8 +70,8 @@ class TimelineWidget extends React.Component {
       .ticks(6, ",f");
     
     let line = d3.svg.line()
-      .x(function(d) { return xScale(d.year); })
-      .y(function(d) { return yScale(d.total); });
+      .x(function(d) { return xScale(d._id); })
+      .y(function(d) { return yScale(d.persons); });
 
 
     svg.select("#x-axis" + this.props.wgtId)
@@ -98,7 +83,7 @@ class TimelineWidget extends React.Component {
       .call(yAxis);
 
     svg.select("#line" + this.props.wgtId)
-      .datum(totals)
+      .datum(nextProps.data)
       .transition()
       .duration(500).ease("sin-in-out")
       .attr("class", "line")
@@ -123,8 +108,7 @@ class TimelineWidget extends React.Component {
 
 TimelineWidget.propTypes = {
   data: React.PropTypes.array.isRequired,
-  wgtId: React.PropTypes.string.isRequired,
-  settings: React.PropTypes.object.isRequired
+  wgtId: React.PropTypes.string.isRequired
 };
 
 export default TimelineWidget;

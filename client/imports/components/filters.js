@@ -5,6 +5,7 @@ class Filters extends React.Component {
   constructor(props) {
     super(props);
     this.update = this.update.bind(this);
+    this.updateBand = this.updateBand.bind(this);
     this.state = {
 
       male: true,

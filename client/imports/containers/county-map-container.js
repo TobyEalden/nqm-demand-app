@@ -1,5 +1,5 @@
 import {composeWithTracker} from "react-komposer";
-import loadMapData from "../composers/load-map-data";
+import loadMapData from "../composers/load-map-data-api";
 import ProgressIndicator from "../components/progress-indicator";
 import Map from "../components/counties-map-wgt";
 

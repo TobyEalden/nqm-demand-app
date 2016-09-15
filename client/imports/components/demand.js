@@ -82,12 +82,7 @@ class Demand extends React.Component {
           filter: {
             "area_id": {
               "$eq": props.data[0]
-            }
-          },          
-          options: {
-            limit: 1000
-          },
-          settings: {
+            },
             "age_band": {
               "$in": Meteor.settings.public.allAgeBands
             }, 
@@ -96,7 +91,10 @@ class Demand extends React.Component {
                 "male", "female"
               ]
             }
-          }
+          },          
+          options: {
+            limit: 1000
+          },
         }
       },
       lsoa: {
@@ -154,8 +152,8 @@ class Demand extends React.Component {
     widgets.map.filter.gender["$in"] = gender;
     widgets.map.filter.age_band["$in"] = age_bands;
 
-    widgets.timeline.settings.gender["$in"] = gender;
-    widgets.timeline.settings.age_band["$in"] = age_bands;
+    widgets.timeline.filter.gender["$in"] = gender;
+    widgets.timeline.filter.age_band["$in"] = age_bands;
 
     if (filters.all_ages) widgets.pyramid.settings.age_band["$in"] = Meteor.settings.public.allAgeBands;
     else widgets.pyramid.settings.age_band["$in"] = age_bands;
@@ -168,11 +166,10 @@ class Demand extends React.Component {
   }
 
   render() {    
-    console.log("render demand");
     let widgets = this.state.widgets;
 
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","persons":{"$sum":"$persons"}, "year":{"$push": "$year"}}}]';
-    
+    const timePipe = '[{"$match":{"area_id":' + JSON.stringify(widgets.timeline.filter.area_id) + ',"gender":' + JSON.stringify(widgets.timeline.filter.gender) + ',"age_band":' + JSON.stringify(widgets.timeline.filter.age_band) + '}},{"$group":{"_id":"$year","persons":{"$sum":"$persons"}}}]';
     return (
       <div>
         <Panel className="panel">
@@ -186,7 +183,7 @@ class Demand extends React.Component {
         <Panel className="panel">
           <LsoaDetails name={this.state.lsoa.name} id={this.state.lsoa.id} population={this.state.lsoa.population} area={this.state.lsoa.area} />
           <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
-          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} filter={widgets.timeline.filter} options={widgets.timeline.options} settings={widgets.timeline.settings} />
+          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} pipeline={timePipe}  />
         </Panel>
       </div>
     );
