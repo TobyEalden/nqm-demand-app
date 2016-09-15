@@ -12,13 +12,15 @@ class MapWgt extends React.Component {
     super(props);
     
     this.setLsoa = this.setLsoa.bind(this);
+    this.style = this.style.bind(this);
     this.state = mapKey(props.data, props.geoData);
+    
 
   }
 
   setLsoa(e) {
     const population = _.find(this.props.data, (poplet) => {
-      if (poplet._id == e.target.feature.properties.LSOA11CD && poplet.year[1] == this.props.filter.year["$in"][1]) return true;
+      if (poplet._id === e.target.feature.properties.LSOA11CD && poplet.year[1] === this.props.filter.year["$in"][1]) return true;
       else return false;
     }).persons;
     const lsoa = {
@@ -51,6 +53,7 @@ class MapWgt extends React.Component {
   }
 
   render() {
+    console.log("Render of Map");
 
     const accessToken = "pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA";
     const id = "nqmivan.12id4bh0";
@@ -64,7 +67,7 @@ class MapWgt extends React.Component {
           />
           <GeoJson
             data={this.props.geoData}
-            style={this.style.bind(this)}
+            style={this.style}
             onEachFeature={this.onEachFeature.bind(this)}
           />
         </Map>

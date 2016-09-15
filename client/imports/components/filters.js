@@ -50,9 +50,6 @@ class Filters extends React.Component {
     this.setState(state);
   }
 
-
-
-
   render() {
 
     return (
