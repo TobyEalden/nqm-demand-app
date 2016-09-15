@@ -9,6 +9,7 @@ function loadMapData({mapId, mapFilter, options}, onData) {
     if (err) {
       console.log("Failed to get data: ",err);
     } else {
+      console.log("Getting map data");
       onData(null, {geoData: response.data.data});
     }
   });

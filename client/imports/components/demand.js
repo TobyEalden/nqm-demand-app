@@ -168,6 +168,7 @@ class Demand extends React.Component {
   }
 
   render() {    
+    console.log("render demand");
     let widgets = this.state.widgets;
 
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","persons":{"$sum":"$persons"}, "year":{"$push": "$year"}}}]';

@@ -8,7 +8,7 @@ _ = lodash;
 
 class MapWgt extends React.Component {
 
-  constructor(props) {
+  /*constructor(props) {
     super(props);
     
     this.setLsoa = this.setLsoa.bind(this);
@@ -42,7 +42,7 @@ class MapWgt extends React.Component {
     return this.props.settings.delta ? popDelta(feature, this.props, this.state.deltaKey) : popDensity(feature, this.props, this.state.densityKey);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  /*shouldComponentUpdate(nextProps, nextState) {
 
     if (nextProps.filter == this.props.filter && nextProps.settings.delta == this.props.settings.delta) return false;
     else {
@@ -50,7 +50,12 @@ class MapWgt extends React.Component {
       
       return true;
     }
+  }*/
+ /* componentWillReceiveProps(nextProps) {
+    console.log("receive props");
+    this.setState(mapKey(nextProps.data, nextProps.geoData));
   }
+
 
   render() {
     console.log("Render of Map");
@@ -73,6 +78,10 @@ class MapWgt extends React.Component {
         </Map>
 
     )
+  }*/
+  render() {
+    console.log("Render map");
+    return(<div></div>);
   }
 }
 
