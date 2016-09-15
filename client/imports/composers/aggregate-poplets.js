@@ -11,7 +11,7 @@ function loadAggregate({resourceId, pipeline}, onData) {
     if (err) {
       console.log("Failed to get data: ",err);
     } else {
-      onData(null, {data: response.data.data[0].id_array});
+      onData(null, {data: response.data.data});
     }
   });
 }

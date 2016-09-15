@@ -1,13 +1,15 @@
 import {Meteor} from "meteor/meteor";
 
+_ = lodash;
+
 function popDensity(feature, props, keyValues) { 
 
-  const population = _.find(props.data, function (poplet) {
-    if (poplet.area_id == feature.properties.LSOA11CD && poplet.year == this.settings.year[1]) return true;
+  const population = _.find(props.data, (poplet) => {
+    if (poplet._id == feature.properties.LSOA11CD && poplet.year[1] == props.filter.year["$in"][1]) return true;
     else return false;
-  }.bind(props));
+  }).persons;
   
-  let d = population.persons/feature.properties.area;
+  let d = population/feature.properties.area;
   let i = 0;
   while (d > keyValues[i]) i++;
   if (i > keyValues.length) i = keyValues.length - 1;
@@ -19,12 +21,12 @@ function popDensity(feature, props, keyValues) {
 function popDelta(feature, props, keyValues) {
 
   const originalPop = _.find(props.data, function (poplet) {
-    if (poplet.year == this.settings.year[0] && poplet.area_id == feature.properties.LSOA11CD) return true;
+    if (poplet.year == this.settings.year[0] && poplet._id == feature.properties.LSOA11CD) return true;
     else return false;
   }.bind(props));
 
   const newPop = _.find(props.data, function (poplet) {
-    if (poplet.year == this.settings.year[1] && poplet.area_id == feature.properties.LSOA11CD) return true;
+    if (poplet.year == this.settings.year[1] && poplet._id == feature.properties.LSOA11CD) return true;
     else return false;
   }.bind(props));
 
