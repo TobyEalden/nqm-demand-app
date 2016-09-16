@@ -35,7 +35,7 @@ FlowRouter.route("/", {
 FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
-    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
     mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} /> ; } });
   }
 });
@@ -52,7 +52,7 @@ FlowRouter.route("/demand/:region?", {
 FlowRouter.route("/tables/:region?", {
   name: "tables",
   action: function(params, queryParams) {
-    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
     mount(Layout, { content: function() { return <TableApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline}  /> ; } });
   }
 });

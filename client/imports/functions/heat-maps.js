@@ -5,9 +5,9 @@ _ = lodash;
 function popDensity(feature, props, keyValues) { 
 
   const population = _.find(props.data, (poplet) => {
-    if (poplet._id == feature.properties.LSOA11CD && poplet.year.indexOf(props.filter.year["$in"][1]) != -1) return true;
+    if (poplet._id == feature.properties.LSOA11CD ) return true;
     else return false;
-  }).persons;
+  }).year2;
   
   let d = population/feature.properties.area;
   let i = 0;
@@ -20,17 +20,12 @@ function popDensity(feature, props, keyValues) {
 
 function popDelta(feature, props, keyValues) {
 
-  const originalPop = _.find(props.data, function (poplet) {
-    if (poplet.year == this.settings.year[0] && poplet._id == feature.properties.LSOA11CD) return true;
+  const population = _.find(props.data, (poplet) => {
+    if (poplet._id == feature.properties.LSOA11CD ) return true;
     else return false;
-  }.bind(props));
+  });
 
-  const newPop = _.find(props.data, function (poplet) {
-    if (poplet.year == this.settings.year[1] && poplet._id == feature.properties.LSOA11CD) return true;
-    else return false;
-  }.bind(props));
-
-  const delta = newPop.persons - originalPop.persons;
+  const delta = population.year2 - population.year1;
   
   let i = 0;
   while (delta > keyValues[i]) i++;

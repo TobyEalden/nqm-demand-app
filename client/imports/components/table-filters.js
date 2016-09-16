@@ -1,259 +1,108 @@
 import React from 'react';
+import Select from 'react-select';
+import {Meteor} from "meteor/meteor";
 import Checkbox from 'material-ui/Checkbox';
+
+// Be sure to include styles at some point, probably during your bootstrapping
+import 'react-select/dist/react-select.css';
 
 
 class TableFilters extends React.Component {
   constructor(props) {
     super(props);
-    this.update = this.update.bind(this);
+    this.updateAggregates = this.updateAggregates.bind(this);
+    this.updateBand = this.updateBand.bind(this);
+    this.updateGender = this.updateGender.bind(this);
+    this.updateYears = this.updateYears.bind(this);
+    this.updateLsoas = this.updateLsoas.bind(this);
     this.state = {
+      gender: "male,female",
+      bands: "All Ages",
+      years: new Date().getFullYear().toString(),
+      lsoas: props.lsoas[0],
+      bandOptions: _.map(Meteor.settings.public.allAgeBands, (val) => {
+        return { value: val, label: val};
+      }),
+      yearOptions: _.map(Meteor.settings.public.years, (val) => {
+        return { value: val, label: val};
+      }),
+      lsoaOptions: _.map(props.lsoas, (val) => {
+        return { value: val, label: val};
+      }),
+      genderOptions: [ {value: "male", label: "Male"}, {value: "female", label: "Female"}],
+      aggregates: {age_band: {selected: true, label: "Age Bands"},genders: {selected: true, label: "Genders"},_id: {selected: false, label: "LSOA ID"}}
 
-      male: true,
-      female: true,
-      bands: {
-        all_ages: true,
-        "0-4": true,
-        "5-9": true,
-        "10-14": true,
-        "15-19": true,
-        "20-24": true,
-        "25-29": true,
-        "30-34": true,
-        "35-39": true,
-        "40-44": true,
-        "45-49": true,
-        "50-54": true,
-        "55-59": true,
-        "60-64": true,
-        "65-69": true,
-        "70-74": true,
-        "75-79": true,
-        "80-84": true,
-        "85-89": true,
-        "90+": true
-      }
     }
+    this.state.bandOptions.push({value: "All Ages", label: "All Ages"});
   }
 
-  update(event, checked) {
-
+  updateAggregates(event, checked) {
     let state = _.clone(this.state);
-    state[event.target.id] = checked;
+    state.aggregates[event.target.id].selected = checked;
+    this.props.update(state);
+    this.setState(state); 
+  }
+
+  updateBand(values) {
+    let state = _.clone(this.state);
+    state.bands = values;
     this.props.update(state);
     this.setState(state);
-   
+    
   }
 
-  updateBand(event, checked) {
+  updateGender(values) {
     let state = _.clone(this.state);
-    state.bands[event.target.id] = checked;
+    state.gender = values;
+    this.props.update(state);
+    this.setState(state);
+  }
+
+  updateYears(values) {
+    let state = _.clone(this.state);
+    state.years = values;
+    this.props.update(state);
+    this.setState(state);
+  }
+
+  updateLsoas(values) {
+    let state = _.clone(this.state);
+    state.lsoas = values;
     this.props.update(state);
     this.setState(state);
   }
 
   render() {
-
+ 
     return (
       <div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="male"
-              label="Male" 
-              defaultChecked={true}
-              onCheck={this.update}
-              disabled={this.state.female ? false : true}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="female"
-              label="Female" 
-              defaultChecked={true}
-              onCheck={this.update}
-              disabled={this.state.male ? false : true}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="all_ages"
-              label="All Ages" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="0-4"
-              label="0-4" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="5-9"
-              label="5-9" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="10-14"
-              label="10-14" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="15-19"
-              label="15-19" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="20-24"
-              label="20-24" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="25-29"
-              label="25-29" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="30-34"
-              label="30-34" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="35-39"
-              label="35-39" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="40-44"
-              label="40-44" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="45-49"
-              label="45-49" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="50-54"
-              label="50-54" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="55-59"
-              label="55-59" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="60-64"
-              label="60-64" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="65-69"
-              label="65-69" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="70-74"
-              label="70-74" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="75-79"
-              label="75-79" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="80-84"
-              label="80-84" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="85-89"
-              label="85-89" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="90+"
-              label="90+" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-             
-            />
-          </div>
-        </div>
-       
+        <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
+        <Checkbox id="age_band"
+          label="Aggregate Age Bands" 
+          defaultChecked={true}
+          onCheck={this.updateAggregates}
+        />
+        <Select multi simpleValue value={this.state.gender} placeholder="Select gender(s)" options={this.state.genderOptions} onChange={this.updateGender} />
+        <Checkbox id="gender"
+          label="Aggregate Genders" 
+          defaultChecked={true}
+          onCheck={this.updateAggregates}
+        />
+        <Select multi simpleValue value={this.state.lsoas} placeholder="Select LSOA(s)" options={this.state.lsoaOptions} onChange={this.updateLsoas} />
+        <Checkbox id="_id"
+          label="Aggregate LSOAs" 
+          defaultChecked={false}
+          onCheck={this.updateAggregates}
+        />
+        <Select multi simpleValue value={this.state.years} placeholder="Select Year(s)" options={this.state.yearOptions} onChange={this.updateYears} />       
       </div>
     );
   }
 }
 
 TableFilters.propTypes = {
-  update: React.PropTypes.func
+  update: React.PropTypes.func,
+  lsoas: React.PropTypes.array
 };
 
 export default TableFilters;

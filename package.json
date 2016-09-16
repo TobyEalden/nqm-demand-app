@@ -14,6 +14,8 @@
     "react-komposer": "^1.13.1",
     "react-leaflet": "^0.12.2",
     "react-mounter": "^1.2.0",
+    "react-select": "^1.0.0-rc.1",
+    "react-select-box": "^3.0.1",
     "react-tap-event-plugin": "^1.0.0",
     "reactable": "^0.14.0",
     "superagent": "^2.2.0"

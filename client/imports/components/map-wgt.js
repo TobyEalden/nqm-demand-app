@@ -20,9 +20,9 @@ class MapWgt extends React.Component {
 
   setLsoa(e) {
     const population = _.find(this.props.data, (poplet) => {
-      if (poplet._id === e.target.feature.properties.LSOA11CD && poplet.year[1] === this.props.filter.year["$in"][1]) return true;
+      if (poplet._id === e.target.feature.properties.LSOA11CD) return true;
       else return false;
-    }).persons;
+    }).year2;
     const lsoa = {
       id: e.target.feature.properties.LSOA11CD,
       name: e.target.feature.properties.LSOA11NM,
