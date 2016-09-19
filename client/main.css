@@ -62,19 +62,18 @@ input:-webkit-autofill:focus {
     flex-basis: 400px;
 }
 
-
-
-
-.filter-row {
-  position: relative;
-  width: 100%;
-
+#controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
 }
 
+
 .filter-column {
-  position: relative;
-  float: left;
-  width: 30%;
+  flex-basis: 300px;
 }
 
 
