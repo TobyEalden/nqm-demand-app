@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import {Meteor} from "meteor/meteor";
 import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
 
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
@@ -15,6 +16,9 @@ class TableFilters extends React.Component {
     this.updateGender = this.updateGender.bind(this);
     this.updateYears = this.updateYears.bind(this);
     this.updateLsoas = this.updateLsoas.bind(this);
+    this.selectAllAges = this.selectAllAges.bind(this);
+    this.selectAllLsoas = this.selectAllLsoas.bind(this);
+    this.selectAllYears = this.selectAllYears.bind(this);
     this.state = {
       gender: "male,female",
       bands: "All Ages",
@@ -30,7 +34,7 @@ class TableFilters extends React.Component {
         return { value: val, label: val};
       }),
       genderOptions: [ {value: "male", label: "Male"}, {value: "female", label: "Female"}],
-      aggregates: {age_band: {selected: true, label: "Age Bands"},genders: {selected: true, label: "Genders"},_id: {selected: false, label: "LSOA ID"}}
+      aggregates: {age_band: {selected: true, label: "Age Bands"},gender: {selected: true, label: "Genders"},_id: {selected: false, label: "LSOA ID"}}
 
     }
     this.state.bandOptions.push({value: "All Ages", label: "All Ages"});
@@ -71,12 +75,43 @@ class TableFilters extends React.Component {
     this.props.update(state);
     this.setState(state);
   }
+  
+  selectAllAges() {
+    let state = _.clone(this.state);
+    state.bands = "";
+    _.each(Meteor.settings.public.allAgeBands, (band) => {
+      state.bands += band + ",";
+    });   
+    this.props.update(state);
+    this.setState(state);
+  }
+
+  selectAllLsoas() {
+    let state = _.clone(this.state);
+    state.lsoas = "";
+    _.each(this.props.lsoas, (lsoa) => {
+      state.lsoas += lsoa + ",";
+    });   
+    this.props.update(state);
+    this.setState(state);
+  }
+
+  selectAllYears() {
+    let state = _.clone(this.state);
+    state.years = "";
+    _.each(Meteor.settings.public.years, (year) => {
+      state.years += year + ",";
+    });   
+    this.props.update(state);
+    this.setState(state);
+  }
 
   render() {
  
     return (
       <div>
         <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
+        <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />
         <Checkbox id="age_band"
           label="Aggregate Age Bands" 
           defaultChecked={true}
@@ -89,12 +124,14 @@ class TableFilters extends React.Component {
           onCheck={this.updateAggregates}
         />
         <Select multi simpleValue value={this.state.lsoas} placeholder="Select LSOA(s)" options={this.state.lsoaOptions} onChange={this.updateLsoas} />
+        <RaisedButton id="all_lsoas" label="Select All" onClick={this.selectAllLsoas} />
         <Checkbox id="_id"
           label="Aggregate LSOAs" 
           defaultChecked={false}
           onCheck={this.updateAggregates}
         />
-        <Select multi simpleValue value={this.state.years} placeholder="Select Year(s)" options={this.state.yearOptions} onChange={this.updateYears} />       
+        <Select multi simpleValue value={this.state.years} placeholder="Select Year(s)" options={this.state.yearOptions} onChange={this.updateYears} />      
+        <RaisedButton id="all_years" label="Select All" onClick={this.selectAllYears} /> 
       </div>
     );
   }

@@ -50,7 +50,6 @@ class Tables extends React.Component {
     }), (val, key) =>{
       return {label: val.label, key: key};
     }));
-    console.log(headers);
     if (!newFilter.aggregates._id.selected) headers.push({label:"Area Name", key:"area_name"});
 
     let filter = _.cloneDeep(this.state.filter);
@@ -60,9 +59,14 @@ class Tables extends React.Component {
     filter.year["$in"] = newFilter.years.split(",");
 
     let pipeline = '[{"$match":{"area_id":' + JSON.stringify(filter.area_id) + ',"gender":' + JSON.stringify(filter.gender) + ',"age_band":' + JSON.stringify(filter.age_band) + ',"year":' + JSON.stringify(filter.year) + '}},{"$group":{"_id":';
-    pipeline += newFilter.aggregates._id.selected ? '"$year",' : '{"area_id":"$area_id","year":"$year"},';
+    pipeline += newFilter.aggregates._id.selected ? '{"year":"$year"' : '{"area_id":"$area_id","year":"$year"';
+    pipeline += newFilter.aggregates.age_band.selected ? "" : ',"age_band":"$age_band"';
+    pipeline += newFilter.aggregates.gender.selected ? "" : ',"gender":"$gender"';
+    pipeline += "},";
     pipeline += newFilter.aggregates._id.selected ? '"area_id":{"$push":"$area_id"},' : '"year":{"$push":"$year"},';
     pipeline += '"area_name":{"$push":"$area_name"},';
+    pipeline += '"gender":{"$push":"$gender"},';
+    pipeline += '"age_band":{"$push":"$age_band"},';
     pipeline += '"persons":{"$sum":"$persons"}}}]';
 
     this.setState({
