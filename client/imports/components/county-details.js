@@ -9,8 +9,7 @@ class CountyDetails extends React.Component {
       card: {
         margin: 20,
         padding: 20,
-        width: "33%",
-        position: "relative"
+        textAlign: "center"
       }
    };
     return (

@@ -9,7 +9,6 @@ import LsoaDetails from "./lsoa-details";
 import YearSlider from "./year-slider";
 import MapToggle from "./map-toggle";
 import Filter from "./filters";
-import Panel from "./panel";
 
 _ = lodash;
 
@@ -139,13 +138,8 @@ class Demand extends React.Component {
     if(filters.male) gender.push("male");
     if(filters.female) gender.push("female");
 
-    let age_bands = [];
-    if(filters.all_ages) age_bands.push("All Ages")
-    else {
-      age_bands = _.map(filters.bands, (enabled, band) => {
-        if (enabled) return band;
-      });
-    }
+    let age_bands =  filters.bands.split(",");
+   
 
     let widgets = _.cloneDeep(this.state.widgets);
 
@@ -155,7 +149,7 @@ class Demand extends React.Component {
     widgets.timeline.filter.gender["$in"] = gender;
     widgets.timeline.filter.age_band["$in"] = age_bands;
 
-    if (filters.all_ages) widgets.pyramid.settings.age_band["$in"] = Meteor.settings.public.allAgeBands;
+    if (age_bands.indexOf("All Ages") != -1) widgets.pyramid.settings.age_band["$in"] = Meteor.settings.public.allAgeBands;
     else widgets.pyramid.settings.age_band["$in"] = age_bands;
     widgets.pyramid.settings.gender["$in"] = gender;
 
@@ -170,22 +164,21 @@ class Demand extends React.Component {
 
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","year1":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][0] + '"]},"$persons",0]}},"year2":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][1] + '"]},"$persons",0]}}}}]';
     const timePipe = '[{"$match":{"area_id":' + JSON.stringify(widgets.timeline.filter.area_id) + ',"gender":' + JSON.stringify(widgets.timeline.filter.gender) + ',"age_band":' + JSON.stringify(widgets.timeline.filter.age_band) + '}},{"$group":{"_id":"$year","persons":{"$sum":"$persons"}}}]';
-    console.log(pipeline);
     return (
-      <div>
-        <Panel className="panel">
+      <div id="main-container">
+        <div id="map-container">
           <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.data}}} pipeline={pipeline} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} settings={widgets.map.settings} />
           <Card className="control-card">
             <YearSlider update={this.setYear}/>
             <MapToggle update={this.toggleMapMode} />
             <Filter update={this.setFilters}/>
           </Card>
-        </Panel>
-        <Panel className="panel">
+        </div>
+        <div id="widget-container">
           <LsoaDetails name={this.state.lsoa.name} id={this.state.lsoa.id} population={this.state.lsoa.population} area={this.state.lsoa.area} />
           <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
           <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} pipeline={timePipe}  />
-        </Panel>
+        </div>
       </div>
     );
   }

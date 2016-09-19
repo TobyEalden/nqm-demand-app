@@ -48,6 +48,10 @@ class TableFilters extends React.Component {
   }
 
   updateBand(values) {
+    if ((values.indexOf("All Ages") != -1) && (values != "All Ages")) {
+      if (this.state.bands.indexOf("All Ages") != -1) values = values.replace("All Ages", "");
+      else values = "All Ages";
+    }
     let state = _.clone(this.state);
     state.bands = values;
     this.props.update(state);

@@ -57,12 +57,6 @@ FlowRouter.route("/tables/:region?", {
   }
 });
 
-/*FlowRouter.route("/csv/:data", {
-  name: "csv",
-  action: function(params, queryParams) {
-    mount(Layour, {content: function() { return <Download }})
-  }
-});*/
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 
 FlowRouter.route("/auth-server", {

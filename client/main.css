@@ -31,40 +31,39 @@ input:-webkit-autofill:focus {
   stroke-width: 1.5px;
 }
 
+#main-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+#map-container {
+  flex-grow: 1;
+  flex-basis: 600px;
+  padding: 10px;
+}
+
+#widget-container {
+  flex-grow: 1;
+  flex-basis: 400px;
+  padding: 10px;
+  text-align: center;
+}
+
 .leaflet-container {
     height: 600px;
-    width: 100%;
-    position: relative;
-    min-width: 400px;
-    
+   
 }
 
 .wgt-card {
-  margin: 20;
-  padding: 20;
-  width: 100%;
-  position: relative;
-  max-width: 400px;
-  margin-bottom: 10px;
+    flex-basis: 400px;
 }
 
-.control-card {
-  margin: 20;
-  padding: 20;
-  width: 100%;
-  position: relative;
-  max-width: 600px;
-  margin-bottom: 10px;
-}
 
-.panel {
-  width: 48%;
-  min-width: 400px;
-  float: left;
-  position: relative;
-  margin-left: 1%;
-  max-width: 600px;
-}
+
 
 .filter-row {
   position: relative;

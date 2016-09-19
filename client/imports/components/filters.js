@@ -1,38 +1,27 @@
 import React from 'react';
+import {Meteor} from "meteor/meteor";
 import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
+import Select from 'react-select';
+// Be sure to include styles at some point, probably during your bootstrapping
+import 'react-select/dist/react-select.css';
 
 class Filters extends React.Component {
   constructor(props) {
     super(props);
     this.update = this.update.bind(this);
     this.updateBand = this.updateBand.bind(this);
+    this.selectAllAges = this.selectAllAges.bind(this);
     this.state = {
 
       male: true,
       female: true,
-      all_ages: true,
-      bands: { 
-        "0-4": true,
-        "5-9": true,
-        "10-14": true,
-        "15-19": true,
-        "20-24": true,
-        "25-29": true,
-        "30-34": true,
-        "35-39": true,
-        "40-44": true,
-        "45-49": true,
-        "50-54": true,
-        "55-59": true,
-        "60-64": true,
-        "65-69": true,
-        "70-74": true,
-        "75-79": true,
-        "80-84": true,
-        "85-89": true,
-        "90+": true
-      }
+      bands: "All Ages",
+      bandOptions: _.map(Meteor.settings.public.allAgeBands, (val) => {
+        return { value: val, label: val};
+      })
     }
+    this.state.bandOptions.push({value: "All Ages", label: "All Ages"});
   }
 
   update(event, checked) {
@@ -43,10 +32,25 @@ class Filters extends React.Component {
     this.setState(state);
    
   }
-  updateBand(event, checked) {
-
+  updateBand(values) {
+    if ((values.indexOf("All Ages") != -1) && (values != "All Ages")) {
+      if (this.state.bands.indexOf("All Ages") != -1) values = values.replace("All Ages", "");
+      else values = "All Ages";
+    }
+    if (values === "") values = "All Ages";
     let state = _.clone(this.state);
-    state.bands[event.target.id] = checked;
+    state.bands = values;
+    this.props.update(state);
+    this.setState(state);
+    
+  }
+
+  selectAllAges() {
+    let state = _.clone(this.state);
+    state.bands = "";
+    _.each(Meteor.settings.public.allAgeBands, (band) => {
+      state.bands += band + ",";
+    });   
     this.props.update(state);
     this.setState(state);
   }
@@ -55,7 +59,6 @@ class Filters extends React.Component {
 
     return (
       <div>
-        <div className="filter-row">
           <div className="filter-column">
             <Checkbox id="male"
               label="Male" 
@@ -72,180 +75,8 @@ class Filters extends React.Component {
               disabled={this.state.male ? false : true}
             />
           </div>
-          <div className="filter-column">
-            <Checkbox id="all_ages"
-              label="All Ages" 
-              defaultChecked={true}
-              onCheck={this.update}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="0-4"
-              label="0-4" 
-              defaultChecked={true}
-              onCheck={this.updateBandBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="5-9"
-              label="5-9" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="10-14"
-              label="10-14" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="15-19"
-              label="15-19" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="20-24"
-              label="20-24" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="25-29"
-              label="25-29" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="30-34"
-              label="30-34" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="35-39"
-              label="35-39" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="40-44"
-              label="40-44" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="45-49"
-              label="45-49" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="50-54"
-              label="50-54" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="55-59"
-              label="55-59" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="60-64"
-              label="60-64" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="65-69"
-              label="65-69" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="70-74"
-              label="70-74" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="75-79"
-              label="75-79" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="80-84"
-              label="80-84" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="85-89"
-              label="85-89" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
-        <div className="filter-row">
-          <div className="filter-column">
-            <Checkbox id="90+"
-              label="90+" 
-              defaultChecked={true}
-              onCheck={this.updateBand}
-              disabled={this.state.all_ages ? true : false}
-            />
-          </div>
-        </div>
+          <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
+          <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />
        
       </div>
     );
