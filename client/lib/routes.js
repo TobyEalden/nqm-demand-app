@@ -6,7 +6,7 @@ import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
 import DemandApp from "../imports/containers/demand-container";
 import TableApp from "../imports/containers/table-container";
-import Counties from "../imports/components/counties";
+import Counties from "../imports/components/county-view/counties";
 
 
 // Register a trigger to be called before every route.
@@ -36,7 +36,7 @@ FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} /> ; } });
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} /> ; } });
   }
 });
 
@@ -49,7 +49,7 @@ FlowRouter.route("/demand/:region?", {
   }
 });*/
 
-FlowRouter.route("/tables/:region?", {
+FlowRouter.route("/tables/:region", {
   name: "tables",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 

@@ -1,19 +1,12 @@
 import React from "react";
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import { Card, CardTitle } from 'material-ui/Card';
 
 class CountyDetails extends React.Component {
   
 
   render() {
-    var styles = {
-      card: {
-        margin: 20,
-        padding: 20,
-        textAlign: "center"
-      }
-   };
     return (
-      <Card style={styles.card}>
+      <Card className="card">
         <CardTitle title={this.props.name} />
       </Card>
     );

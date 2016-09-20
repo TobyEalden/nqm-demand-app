@@ -18,6 +18,7 @@ function mapKey(data, geoData) {
   sortedDensity.sort();
   sortedDeltas.sort();
 
+  // Locate the values that correspond to the percentiles we need, percentiles = number of colours on key
   let hop = Math.floor(sortedDensity.length/Meteor.settings.public.heatMapKey.length);
   let densityKey = [];
   for (let i = hop; i < sortedDensity.length; i += hop) densityKey.push(sortedDensity[i]);

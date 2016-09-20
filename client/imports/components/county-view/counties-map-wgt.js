@@ -45,14 +45,10 @@ class CountiesMap extends React.Component {
     });
   }
 
-
   render() {
-
-
     return (
       <div>
         <Map center={[53, -3]} zoom={6}>
-   
           <GeoJson
             data={this.props.geoData}
             style={{color: '#FF0000', weight: 1, opacity: 0.5}}
@@ -69,10 +65,6 @@ CountiesMap.propTypes = {
   geoData: React.PropTypes.array.isRequired,
   updateRegion: React.PropTypes.func.isRequired,
   wgtId: React.PropTypes.string.isRequired,
-  mapId: React.PropTypes.string.isRequired,
-  data: React.PropTypes.array, 
-  update: React.PropTypes.func,
-  centre: React.PropTypes.object
 };
 
 export default CountiesMap;

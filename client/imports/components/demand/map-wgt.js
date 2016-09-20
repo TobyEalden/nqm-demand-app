@@ -1,7 +1,8 @@
 import React from "react";
+import { Meteor } from "meteor/meteor";
 
-import { popDensity, popDelta } from "../functions/heat-maps";
-import { mapKey } from "../functions/map-key";
+import { popDensity, popDelta } from "../../functions/heat-maps";
+import { mapKey } from "../../functions/map-key";
 import { Map, Marker, Popup, TileLayer, GeoJson } from 'react-leaflet';
 
 _ = lodash;
@@ -11,18 +12,18 @@ class MapWgt extends React.Component {
   constructor(props) {
     super(props);
     
+    // Bind context
     this.setLsoa = this.setLsoa.bind(this);
     this.style = this.style.bind(this);
-    this.state = mapKey(props.data, props.geoData);
-    
 
+    this.state = mapKey(props.data, props.geoData);
   }
 
   setLsoa(e) {
     const population = _.find(this.props.data, (poplet) => {
       if (poplet._id === e.target.feature.properties.LSOA11CD) return true;
       else return false;
-    }).year2;
+    }).year2; // Year 2 is the current year in slider, maybe best to rename these to current and delat year?
     const lsoa = {
       id: e.target.feature.properties.LSOA11CD,
       name: e.target.feature.properties.LSOA11NM,
@@ -42,6 +43,7 @@ class MapWgt extends React.Component {
     return this.props.settings.delta ? popDelta(feature, this.props, this.state.deltaKey) : popDensity(feature, this.props, this.state.densityKey);
   }
 
+  // Required due to strange behaviour in Komposer causing multiple renders per prop update
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.data === this.props.data) return false;
     else return true;   
@@ -53,9 +55,7 @@ class MapWgt extends React.Component {
 
   render() {
 
-    const accessToken = "pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA";
-    const id = "nqmivan.12id4bh0";
-    const url = "https://api.tiles.mapbox.com/v4/" + id + "/{z}/{x}/{y}.png?access_token=" + accessToken;
+    const url = "https://api.tiles.mapbox.com/v4/" + Meteor.settings.public.mapUsername + "/{z}/{x}/{y}.png?access_token=" + Meteor.settings.public.mapPassword;
     return (
 
         <Map center={this.props.centre} zoom={9}>

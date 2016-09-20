@@ -1,8 +1,6 @@
-import {composeWithTracker} from "react-komposer";
-import {composeAll} from "react-komposer";
 import {compose} from "react-komposer";
 
-import MapWgt from "../components/map-wgt";
+import MapWgt from "../components/demand/map-wgt";
 //import loadData from "../composers/aggregate-poplets";
 //import loadMapData from "../composers/load-map-data-api";
 import loadMapData from "../composers/map";

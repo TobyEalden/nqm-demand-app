@@ -31,20 +31,7 @@ input:-webkit-autofill:focus {
   stroke-width: 1.5px;
 }
 
-#main-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: flex-start;
-  align-items: flex-start;
-}
 
-#map-container {
-  flex-grow: 1;
-  flex-basis: 600px;
-  padding: 10px;
-}
 
 #widget-container {
   flex-grow: 1;
@@ -118,4 +105,31 @@ td {
     border-top-color: rgb(221, 221, 221);
     color: rgb(34, 34, 34);
     background-color: rgb(255, 255, 255);
+}
+
+
+/* Final CSS */
+
+/* Material UI global card CSS */
+.card {
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Flex Containers */
+
+#main-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+#map-container {
+  flex-grow: 1;
+  flex-basis: 600px;
+  padding: 10px;
 }
