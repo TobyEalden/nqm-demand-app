@@ -36,7 +36,7 @@ FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} /> ; } });
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} name={queryParams.name} area={queryParams.area}/> ; } });
   }
 });
 

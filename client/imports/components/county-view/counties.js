@@ -11,8 +11,8 @@ class Counties extends React.Component {
     this.updateRegion = this.updateRegion.bind(this);
   }
 
-  updateRegion(region, centre) {
-    FlowRouter.go("demand", {region: region}, {centre: JSON.stringify(centre)});
+  updateRegion(region, centre, name, area) {
+    FlowRouter.go("demand", {region: region}, {centre: JSON.stringify(centre), name: name, area: area});
   }
 
   render() {

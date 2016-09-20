@@ -6,7 +6,6 @@ class LsoaDetails extends React.Component {
 
   render() {
     const lsoa = this.props.lsoa;
-    if (lsoa.name == "") return (<div></div>);
     return (
       <Card className="wgt-card">
         <CardTitle title={lsoa.name + " | " + lsoa.id} />

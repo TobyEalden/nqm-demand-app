@@ -1,6 +1,6 @@
 import {Meteor} from "meteor/meteor";
 
-function defaultState(lsoas) {
+function defaultState(lsoas, region, name, area) {
   const state = {
     widgets: {
       map: {
@@ -36,7 +36,7 @@ function defaultState(lsoas) {
       pyramid: {
         filter: {
           "area_id": {
-            "$eq": lsoas[0]
+            "$eq": region
           },
           "year": {
             "$eq": new Date().getFullYear().toString()
@@ -59,7 +59,7 @@ function defaultState(lsoas) {
       timeline: {
         filter: {
           "area_id": {
-            "$eq": lsoas[0]
+            "$eq": region
           },
           "age_band": {
             "$in": Meteor.settings.public.allAgeBands
@@ -76,11 +76,12 @@ function defaultState(lsoas) {
       }
     },
     lsoa: {
-      id: "",
-      name: "",
+      id: region,
+      name: name,
       population: 0,
-      area: 0
-    }
+      area: area
+    },
+    zoomed: false
   };
 
   return state;

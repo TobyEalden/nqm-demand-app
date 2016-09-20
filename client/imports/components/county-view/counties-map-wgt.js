@@ -17,7 +17,7 @@ class CountiesMap extends React.Component {
   }
 
   updateRegion(e) {
-    this.props.updateRegion(e.target.feature.properties.LAD15CD, e.latlng);
+    this.props.updateRegion(e.target.feature.properties.LAD15CD, e.latlng, e.target.feature.properties.LAD15NM, e.target.feature.properties.area);
   }
 
   highlight(e) {

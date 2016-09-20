@@ -26,7 +26,8 @@ class Demand extends React.Component {
     this.setFilters = this.setFilters.bind(this);
     this.tableView = this.tableView.bind(this);
 
-    this.state = defaultState(props.data);
+    this.state = defaultState(props.data, props.region, props.name, props.area);
+    console.log(this.state);
   }
 
   /* Update functions, if you add a new widget check carefully whether it needs to be updated, it's possibly 
@@ -46,7 +47,8 @@ class Demand extends React.Component {
     widgets.timeline.filter.area_id["$eq"] = lsoa.id;
     this.setState({
       widgets: widgets,
-      lsoa: lsoa
+      lsoa: lsoa,
+      zoomed: true
     });
   }
 
@@ -109,8 +111,8 @@ class Demand extends React.Component {
         
         <div id="widget-container">
           <LsoaDetails lsoa={this.state.lsoa} />
-          <PyramidWidget wgtId="pyramid" resourceId={Meteor.settings.public.populationData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
-          <TimelineWidget wgtId="timeline" resourceId={Meteor.settings.public.populationData} pipeline={timePipe}  />
+          <PyramidWidget wgtId="pyramid" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
+          <TimelineWidget wgtId="timeline" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} pipeline={timePipe}  />
         </div>
       </div>
     );
@@ -120,7 +122,9 @@ class Demand extends React.Component {
 Demand.propTypes = {
   data: React.PropTypes.array.isRequired,
   centre: React.PropTypes.object.isRequired,
-  region: React.PropTypes.string.isRequired
+  region: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  area: React.PropTypes.number.isRequired
 }
 
 export default Demand;

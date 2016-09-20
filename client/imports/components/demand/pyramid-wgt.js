@@ -20,6 +20,7 @@ class PyramidWidget extends React.Component {
       pointA: 112, // regionwidth
       pointB: 168 // width - regionwidth
     };
+    this.draw = this.draw.bind(this);
    
   }
   
@@ -27,43 +28,12 @@ class PyramidWidget extends React.Component {
     return 'translate(' + x + ',' + y + ')';
   }
 
-  componentDidMount() {
-
-    let svg = d3.select('#pyramid' + this.props.wgtId)
-      .attr('width', this.state.margin.left + this.state.width + this.state.margin.right)
-      .attr('height', this.state.margin.top + this.state.height + this.state.margin.bottom)
-      .append('g')
-      .attr('transform', this.translation(this.state.margin.left, this.state.margin.top));
-
-    svg.append("g")
-      .attr('class', 'axis y left ' + this.props.wgtId)
-      .attr('transform', this.translation(this.state.pointA, 0));
-    svg.append('g')
-      .attr('class', 'axis y right ' + this.props.wgtId)
-      .attr('transform', this.translation(this.state.pointB, 0));
-    svg.append('g')
-      .attr('class', 'axis x left ' + this.props.wgtId)
-      .attr('transform', this.translation(0, this.state.height));
-    svg.append('g')
-      .attr('class', 'axis x right  ' + this.props.wgtId)
-      .attr('transform', this.translation(this.state.pointB, this.state.height));
-
-    let leftBarGroup = svg.append('g')
-      .attr("id", "leftBarGroup" + this.props.wgtId)
-      .attr('transform', this.translation(this.state.pointA, 0) + 'scale(-1,1)');
-    let rightBarGroup = svg.append('g')
-      .attr("id", "rightBarGroup" + this.props.wgtId)
-      .attr('transform', this.translation(this.state.pointB, 0));
-
-  }
-  
-  componentWillReceiveProps(nextProps) {
-    // Data
+  draw(props) {
     let totalPop = 0;
     let maxValue = 0;
     let males = [];
     let females = [];
-    _.forEach(nextProps.data, function(data){
+    _.forEach(props.data, function(data){
       if (data.age_band == "All Ages") totalPop += data.persons;
       else {
         if (data.persons > maxValue) maxValue = data.persons;
@@ -80,9 +50,9 @@ class PyramidWidget extends React.Component {
     });
 
     // Elements
-    let svg = d3.select('#pyramid' + this.props.wgtId);
-    let leftBarGroup = svg.select("#leftBarGroup" + this.props.wgtId);
-    let rightBarGroup = svg.select("#rightBarGroup" + this.props.wgtId);
+    let svg = d3.select('#pyramid' + props.wgtId);
+    let leftBarGroup = svg.select("#leftBarGroup" + props.wgtId);
+    let rightBarGroup = svg.select("#rightBarGroup" + props.wgtId);
 
     // Scales
     let xScale = d3.scale.linear()
@@ -126,30 +96,30 @@ class PyramidWidget extends React.Component {
       .ticks(5, ",f");
     
     // Drawing
-    svg.selectAll(".axis.y.left." + this.props.wgtId)
+    svg.selectAll(".axis.y.left." + props.wgtId)
       .call(yAxisLeft)
       .selectAll('text')
       .style('text-anchor', 'middle');
     
-    svg.selectAll(".axis.y.right." + this.props.wgtId)
+    svg.selectAll(".axis.y.right." + props.wgtId)
       .call(yAxisRight);
 
-    svg.selectAll(".axis.x.left." + this.props.wgtId)
+    svg.selectAll(".axis.x.left." + props.wgtId)
       .transition()
       .call(xAxisLeft);
     
-    svg.selectAll(".axis.x.right." + this.props.wgtId)
+    svg.selectAll(".axis.x.right." + props.wgtId)
       .transition()
       .call(xAxisRight);
 
-    let barLeft = leftBarGroup.selectAll(".bar.left." + this.props.wgtId)
+    let barLeft = leftBarGroup.selectAll(".bar.left." + props.wgtId)
       .data(males);
-    let barRight = rightBarGroup.selectAll('.bar.right.' + this.props.wgtId)
+    let barRight = rightBarGroup.selectAll('.bar.right.' + props.wgtId)
       .data(females);
     
     // Show data
     barLeft.enter().append('rect')
-      .attr('class', 'bar left ' + this.props.wgtId)
+      .attr('class', 'bar left ' + props.wgtId)
       .attr('x', 0)
       .style("fill", "#a6cee3")
       .style("stroke-width", 1)
@@ -159,14 +129,14 @@ class PyramidWidget extends React.Component {
       .duration(500).ease("sin-in-out")
       .attr('y', function(d) { return yScale(d.age_band); })
       .style("opacity", function(d) {
-        if(nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
+        if(props.settings.age_band["$in"].indexOf(d.age_band) != -1 && props.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
         else return 0.5;
       })
       .attr('width', function(d) { return xScaleRight(d.persons);})
       .attr('height', yScale.rangeBand());
 
     barRight.enter().append('rect')
-      .attr('class', 'bar right ' + this.props.wgtId)
+      .attr('class', 'bar right ' + props.wgtId)
       .attr('x', 0)
       .style("fill", "#fb9a99")
       .style("stroke-width", 1)
@@ -176,11 +146,48 @@ class PyramidWidget extends React.Component {
       .duration(500).ease("sin-in-out")
       .attr('y', function(d) { return yScale(d.age_band); })
       .style("opacity", function(d) {
-        if(nextProps.settings.age_band["$in"].indexOf(d.age_band) != -1 && nextProps.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
+        if(props.settings.age_band["$in"].indexOf(d.age_band) != -1 && props.settings.gender["$in"].indexOf(d.gender) != -1) return 1.0;
         else return 0.5;
       })
       .attr('width', function(d) { return xScaleRight(d.persons); })
       .attr('height', yScale.rangeBand());
+  }
+
+  componentDidMount() {
+
+    let svg = d3.select('#pyramid' + this.props.wgtId)
+      .attr('width', this.state.margin.left + this.state.width + this.state.margin.right)
+      .attr('height', this.state.margin.top + this.state.height + this.state.margin.bottom)
+      .append('g')
+      .attr('transform', this.translation(this.state.margin.left, this.state.margin.top));
+
+    svg.append("g")
+      .attr('class', 'axis y left ' + this.props.wgtId)
+      .attr('transform', this.translation(this.state.pointA, 0));
+    svg.append('g')
+      .attr('class', 'axis y right ' + this.props.wgtId)
+      .attr('transform', this.translation(this.state.pointB, 0));
+    svg.append('g')
+      .attr('class', 'axis x left ' + this.props.wgtId)
+      .attr('transform', this.translation(0, this.state.height));
+    svg.append('g')
+      .attr('class', 'axis x right  ' + this.props.wgtId)
+      .attr('transform', this.translation(this.state.pointB, this.state.height));
+
+    let leftBarGroup = svg.append('g')
+      .attr("id", "leftBarGroup" + this.props.wgtId)
+      .attr('transform', this.translation(this.state.pointA, 0) + 'scale(-1,1)');
+    let rightBarGroup = svg.append('g')
+      .attr("id", "rightBarGroup" + this.props.wgtId)
+      .attr('transform', this.translation(this.state.pointB, 0));
+    
+    this.draw(this.props);
+
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    this.draw(nextProps);
+    
   
   }
 
