@@ -14,7 +14,8 @@ function popDensity(feature, props, keyValues) {
   while (d > keyValues[i]) i++;
   if (i > keyValues.length) i = keyValues.length - 1;
   let heat = Meteor.settings.public.heatMapKey[i];
-  return {fillColor: heat, color: "#FF0000", weight: 1, fillOpacity: 0.5};
+  if (feature.properties.LSOA11CD === props.settings.area_id) return {fillColor: heat, color: "#FF0000", weight: 5, fillOpacity: 0.5};
+  else return {fillColor: heat, color: "#FF0000", weight: 1, fillOpacity: 0.5};
 
 }
 
@@ -32,8 +33,8 @@ function popDelta(feature, props, keyValues) {
   if (i > keyValues.length) i = keyValues.length - 1;
   let heat = Meteor.settings.public.heatMapKey[i];
   
-  return {fillColor: heat, color: "#FF0000", weight: 1, fillOpacity: 0.5};
-
+  if (feature.properties.LSOA11CD === props.settings.area_id) return {fillColor: heat, color: "#FF0000", weight: 5, fillOpacity: 0.5};
+  else return {fillColor: heat, color: "#FF0000", weight: 1, fillOpacity: 0.5};
 }
 
 export { popDensity, popDelta }; 

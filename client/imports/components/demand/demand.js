@@ -45,6 +45,7 @@ class Demand extends React.Component {
     let widgets = _.cloneDeep(this.state.widgets);
     widgets.pyramid.filter.area_id["$eq"] = lsoa.id;
     widgets.timeline.filter.area_id["$eq"] = lsoa.id;
+    widgets.map.settings.area_id = lsoa.id;
     this.setState({
       widgets: widgets,
       lsoa: lsoa,
@@ -124,7 +125,7 @@ Demand.propTypes = {
   centre: React.PropTypes.object.isRequired,
   region: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
-  area: React.PropTypes.number.isRequired
+  area: React.PropTypes.string.isRequired
 }
 
 export default Demand;
