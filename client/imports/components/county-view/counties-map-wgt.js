@@ -47,7 +47,7 @@ class CountiesMap extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="map-container">
         <Map center={[53, -3]} zoom={6}>
           <GeoJson
             data={this.props.geoData}

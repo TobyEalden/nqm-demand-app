@@ -27,7 +27,7 @@ FlowRouter.triggers.enter([function(context, redirect) {
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Counties />; } });
+    mount(Layout, { content: function() { return <Counties />; }, region: "E07000091" });
   }
 });
 
@@ -36,7 +36,7 @@ FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} name={queryParams.name} area={queryParams.area}/> ; } });
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} name={queryParams.name} area={queryParams.area}/> ; }, region: params.region });
   }
 });
 
@@ -53,7 +53,7 @@ FlowRouter.route("/tables/:region", {
   name: "tables",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <TableApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline}  /> ; } });
+    mount(Layout, { content: function() { return <TableApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline}  /> ; }, region: params.region });
   }
 });
 

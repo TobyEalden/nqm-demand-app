@@ -7,6 +7,12 @@ import Login from "./login";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import GP from 'material-ui/svg-icons/maps/local-hospital';
+import School from 'material-ui/svg-icons/maps/local-library';
+import ZoomOut from 'material-ui/svg-icons/maps/zoom-out-map';
+import TableIcon from "material-ui/svg-icons/action/view-list";
 
 class Layout extends React.Component{
   constructor(props) {
@@ -15,6 +21,7 @@ class Layout extends React.Component{
     // Bind event handlers to "this"
     this._onLogout = this._onLogout.bind(this);
     this._onUserPassword = this._onUserPassword.bind(this);
+    this.tableView = this.tableView.bind(this);
   }
   _onUserPassword(user, password) {
     // Pass share credentials on to the connection manager.
@@ -23,6 +30,15 @@ class Layout extends React.Component{
   _onLogout() {
     FlowRouter.go("logout");
   }
+
+  tableView() {
+    FlowRouter.go("tables", {region: this.props.region});
+  }
+
+  regionView() {
+    FlowRouter.go("/");
+  }
+
   render() {
     var styles = {
       appBar: {
@@ -50,6 +66,16 @@ class Layout extends React.Component{
       <MuiThemeProvider>
         <div>
           <AppBar style={styles.appBar} title="nqm demand app" showMenuIconButton={false} iconElementRight={logoutButton} />
+          <div id="side-menu" style={styles.layoutContent}>
+            <List>
+                <ListItem key="demandPack" primaryText="Demand Packs" 
+                  initiallyOpen={true}
+                  nestedItems={[<ListItem key="school" primaryText="School Data Pack" rightIcon={<School />} />,<ListItem key="GP" primaryText="GP Data Pack" rightIcon={<GP />} />]}/>
+              <Divider />
+                <ListItem key="regionView" onTouchTap={this.regionView} primaryText="Region View" rightIcon={<ZoomOut />} />
+                <ListItem key="tableView" onTouchTap={this.tableView} primaryText="Table View" rightIcon={<TableIcon />} />
+            </List>
+          </div>
           <div style={styles.layoutContent}>
             {content}
           </div>

@@ -9,10 +9,10 @@ class MapToggle extends React.Component {
   render() {
     const styles = {
       div: {
-        position: "relative",
-        width: "90%",
-        marginLeft: "5%",
-        marginRight: "5%"
+
+        width: 200,
+        float: "left"
+
       }
     }
     return (

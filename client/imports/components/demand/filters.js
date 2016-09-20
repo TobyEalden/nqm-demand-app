@@ -58,29 +58,30 @@ class Filters extends React.Component {
   render() {
 
     return (
-      <div id="controls">
-          <div className="filter-column">
-            <Checkbox id="male"
-              label="Male" 
-              defaultChecked={true}
-              onCheck={this.update}
-              disabled={this.state.female ? false : true}
-            />
-          </div>
-          <div className="filter-column">
-            <Checkbox id="female"
-              label="Female" 
-              defaultChecked={true}
-              onCheck={this.update}
-              disabled={this.state.male ? false : true}
-            />
-          </div>
-          <div className="filter-column">
-            <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
-          </div>
-          <div className="filter-column">
-            <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />
-          </div>
+      <div>
+        <div className="control-group">
+          <Checkbox id="male"
+          label="Male" 
+          defaultChecked={true}
+          onCheck={this.update}
+          disabled={this.state.female ? false : true}
+          />
+
+          <Checkbox id="female"
+          label="Female" 
+          defaultChecked={true}
+          onCheck={this.update}
+          disabled={this.state.male ? false : true}
+          />
+        </div>
+        <div className="select-filter">
+          <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
+        </div>
+
+        <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />
+
+        
+
        
       </div>
     );

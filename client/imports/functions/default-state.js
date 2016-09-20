@@ -73,6 +73,16 @@ function defaultState(lsoas, region, name, area) {
         options: {
           limit: 1000
         },
+      },
+      minimap: {
+        filter: {
+          "properties.LAD15CD": {
+            "$eq": region
+          }
+        },
+        options: {
+          limit: 1000
+        }
       }
     },
     lsoa: {

@@ -6,7 +6,7 @@ class CountyDetails extends React.Component {
 
   render() {
     return (
-      <Card className="card">
+      <Card className="card controller-container">
         <CardTitle title={this.props.name} />
       </Card>
     );

@@ -20,13 +20,12 @@ class YearSlider extends React.Component {
     const styles = {
       slider: {
         position: "relative",
-        width: "90%",
-        marginLeft: "5%",
-        marginRight: "5%"
+        width: "100%"
+
       },
       div: {
         position: "relative",
-        width: "100%",
+        flexBasis: 400,
         textAlign: "center"
       },
       p: {

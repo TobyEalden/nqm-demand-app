@@ -18,9 +18,9 @@ class Counties extends React.Component {
   render() {
     return (
       <div id="main-container">
-        <div id="map-container">
+      
           <MapWidget wgtId="map" mapId={Meteor.settings.public.countyGeo} options={{limit: 1000}} mapFilter={{}} updateRegion={this.updateRegion}  />     
-        </div>
+
       </div>
     );
   }

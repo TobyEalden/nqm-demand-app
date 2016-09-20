@@ -6,11 +6,12 @@ import { defaultState } from "../../functions/default-state";
 import MapWidget from "../../containers/map-container";
 import PyramidWidget from "../../containers/pyramid-container";
 import TimelineWidget from "../../containers/timeline-container";
+import MinimapWidget from "../../containers/minimap-container";
 import LsoaDetails from "./lsoa-details";
 import YearSlider from "./year-slider";
 import MapToggle from "./map-toggle";
 import Filter from "./filters";
-import RaisedButton from 'material-ui/RaisedButton';
+
 
 _ = lodash;
 
@@ -24,7 +25,6 @@ class Demand extends React.Component {
     this.setLsoa = this.setLsoa.bind(this);
     this.toggleMapMode = this.toggleMapMode.bind(this);
     this.setFilters = this.setFilters.bind(this);
-    this.tableView = this.tableView.bind(this);
 
     this.state = defaultState(props.data, props.region, props.name, props.area);
     console.log(this.state);
@@ -45,6 +45,12 @@ class Demand extends React.Component {
     let widgets = _.cloneDeep(this.state.widgets);
     widgets.pyramid.filter.area_id["$eq"] = lsoa.id;
     widgets.timeline.filter.area_id["$eq"] = lsoa.id;
+    widgets.minimap.filter = {
+      "properties.LSOA11CD": {
+        "$eq": lsoa.id
+      }
+    };
+
     widgets.map.settings.area_id = lsoa.id;
     this.setState({
       widgets: widgets,
@@ -85,10 +91,6 @@ class Demand extends React.Component {
 
   }
 
-  tableView() {
-    FlowRouter.go("tables", {region: this.props.region});
-  }
-
   render() {    
     let widgets = this.state.widgets;
 
@@ -99,21 +101,22 @@ class Demand extends React.Component {
     return (
       <div id="main-container">
         <div id="map-container">
-
-          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.data}}} pipeline={pipeline} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} settings={widgets.map.settings} />
-
-          <Card className="control-card">
-            <YearSlider update={this.setYear}/>
+          <Card className="card controller-container">
             <MapToggle update={this.toggleMapMode} />
             <Filter update={this.setFilters}/>
-            <RaisedButton id="tables" label="Table View" onClick={this.tableView} />  
+            
           </Card>   
+          <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.data}}} pipeline={pipeline} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} settings={widgets.map.settings} />
+          <Card className="card controller-container">
+            <YearSlider update={this.setYear}/>
+          </Card> 
         </div>
         
         <div id="widget-container">
           <LsoaDetails lsoa={this.state.lsoa} />
           <PyramidWidget wgtId="pyramid" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
           <TimelineWidget wgtId="timeline" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} pipeline={timePipe}  />
+          <MinimapWidget wgtId="minimap" mapId={this.state.zoomed ? Meteor.settings.public.lsoaGeo : Meteor.settings.public.countyGeo} mapFilter={widgets.minimap.filter} options={widgets.minimap.options} key={this.state.lsoa.id} />
         </div>
       </div>
     );

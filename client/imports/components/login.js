@@ -77,16 +77,17 @@ class Login extends React.Component {
     }
 
     return (
-      <Card style={styles.card}>
-        <CardTitle title="select login method" />
-        <CardText>
-          <RadioButtonGroup name="loginType" onChange={this._onLoginType}>
-            <RadioButton value="authServer" label="authentication server" />
-            <RadioButton value="shareToken" label="share key" />
-          </RadioButtonGroup>
-          {loginContent}
-        </CardText>
-      </Card>
+
+        <Card id="login-container" style={styles.card}>
+          <CardTitle title="select login method" />
+          <CardText>
+            <RadioButtonGroup name="loginType" onChange={this._onLoginType}>
+              <RadioButton value="authServer" label="authentication server" />
+              <RadioButton value="shareToken" label="share key" />
+            </RadioButtonGroup>
+            {loginContent}
+          </CardText>
+        </Card>
     );
   }
 }

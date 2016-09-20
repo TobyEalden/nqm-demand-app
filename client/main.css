@@ -33,37 +33,6 @@ input:-webkit-autofill:focus {
 
 
 
-#widget-container {
-  flex-grow: 1;
-  flex-basis: 400px;
-  padding: 10px;
-  text-align: center;
-}
-
-.leaflet-container {
-    height: 600px;
-   
-}
-
-.wgt-card {
-    flex-basis: 400px;
-}
-
-#controls {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: flex-start;
-  align-items: flex-start;
-}
-
-
-.filter-column {
-  flex-basis: 300px;
-}
-
-
 table {
     display: table;
     border-collapse: separate;
@@ -112,7 +81,7 @@ td {
 
 /* Material UI global card CSS */
 .card {
-    margin: 20px;
+    margin: 0px;
     padding: 20px;
     text-align: center;
 }
@@ -128,8 +97,77 @@ td {
   align-items: flex-start;
 }
 
+#login-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+}
+
 #map-container {
   flex-grow: 1;
-  flex-basis: 600px;
+  flex-basis: 400px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+#widget-container {
+  flex-grow: 1;
+  flex-basis: 400px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+.wgt-card {
+    flex-basis: 400px;
+    height: 300px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.leaflet-container {
+    height: 400px;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    border-radius: 2px;
+}
+
+#widget-container .leaflet-container {
+    width: 400px;
+    height: 300px;
+}
+
+
+.controller-container {
+    width: 100%;
+
+}
+
+.control-group {
+    width: 50%;
+    float: left;
+}
+
+.select-filter {
+    width: 100%;
+    text-align: left;
+    float: left;
+}
+
+/* Side Menu */
+
+#side-menu {
+    float: right;
 }
