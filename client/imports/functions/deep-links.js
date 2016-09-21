@@ -80,7 +80,7 @@ function decode(link) {
         },
         settings: {
           delta: delta,
-          settings: link.lsoa
+          area_id: link.lsoa
         }
       },
       pyramid: {
@@ -137,7 +137,7 @@ function decode(link) {
   };
 
   state.widgets.minimap.filter = zoomed ? {"properties.LSOA11CD": { "$eq": link.lsoa }} :  {"properties.LAD15CD": {"$eq": link.region}};
-  console.log(state);
+
   return state;
 
 }

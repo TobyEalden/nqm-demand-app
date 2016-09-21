@@ -7,7 +7,6 @@ class Minimap extends React.Component {
 
   render() {
     const url = "https://api.tiles.mapbox.com/v4/" + Meteor.settings.public.mapUsername + "/{z}/{x}/{y}.png?access_token=" + Meteor.settings.public.mapPassword;
-    console.log(this.props.geoData);
     return (
 
       <Map center={centreOf(this.props.geoData[0].geometry.coordinates[0])} zoom={9}>

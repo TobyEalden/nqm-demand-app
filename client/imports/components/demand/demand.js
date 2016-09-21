@@ -100,7 +100,6 @@ class Demand extends React.Component {
 
   render() {    
     let widgets = this.state.widgets;
-    console.log(this.state);
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","year1":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][0] + '"]},"$persons",0]}},"year2":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][1] + '"]},"$persons",0]}}}}]';
     const timePipe = '[{"$match":{"area_id":' + JSON.stringify(widgets.timeline.filter.area_id) + ',"gender":' + JSON.stringify(widgets.timeline.filter.gender) + ',"age_band":' + JSON.stringify(widgets.timeline.filter.age_band) + '}},{"$group":{"_id":"$year","persons":{"$sum":"$persons"}}}]';
     
