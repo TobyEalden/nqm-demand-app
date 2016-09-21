@@ -6,7 +6,7 @@ class YearSlider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentYear: new Date().getFullYear()
+      currentYear: parseInt(props.initial, 10)
     }
     this.handleSlider = _.debounce(this.handleSlider.bind(this), 1000);
   }
@@ -54,6 +54,7 @@ class YearSlider extends React.Component {
 }
 
 YearSlider.propTypes = {
-  update: React.PropTypes.func
+  update: React.PropTypes.func.isRequired,
+  initial: React.PropTypes.string.isRequired
 }
 export default YearSlider;

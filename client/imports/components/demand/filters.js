@@ -12,11 +12,19 @@ class Filters extends React.Component {
     this.update = this.update.bind(this);
     this.updateBand = this.updateBand.bind(this);
     this.selectAllAges = this.selectAllAges.bind(this);
+    let male = true;
+    let female = true;
+    if (props.initial.gender["$in"].indexOf("male") === -1) male = false;
+    if (props.initial.gender["$in"].indexOf("female") === -1) female = false;
+    let bands = "";
+    _.each(props.initial.age_band["$in"], (year) =>{
+      bands += year + ",";
+    });
     this.state = {
 
-      male: true,
-      female: true,
-      bands: "All Ages",
+      male: male,
+      female: female,
+      bands: bands,
       bandOptions: _.map(Meteor.settings.public.allAgeBands, (val) => {
         return { value: val, label: val};
       })
@@ -62,14 +70,14 @@ class Filters extends React.Component {
         <div className="control-group">
           <Checkbox id="male"
           label="Male" 
-          defaultChecked={true}
+          defaultChecked={this.state.male}
           onCheck={this.update}
           disabled={this.state.female ? false : true}
           />
 
           <Checkbox id="female"
           label="Female" 
-          defaultChecked={true}
+          defaultChecked={this.state.female}
           onCheck={this.update}
           disabled={this.state.male ? false : true}
           />
@@ -89,7 +97,8 @@ class Filters extends React.Component {
 }
 
 Filters.propTypes = {
-  update: React.PropTypes.func
+  update: React.PropTypes.func.isRequired,
+  initial: React.PropTypes.object.isRequired
 };
 
 export default Filters;

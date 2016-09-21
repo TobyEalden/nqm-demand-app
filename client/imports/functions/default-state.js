@@ -1,12 +1,12 @@
 import {Meteor} from "meteor/meteor";
 
-function defaultState(lsoas, region, name, area) {
+function defaultState(region, name, area) {
   const state = {
     widgets: {
       map: {
         filter: {
           area_id: {
-            $in: lsoas
+            $in: []
           },
           "age_band": {
             "$in": [

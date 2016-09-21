@@ -81,7 +81,7 @@ class Tables extends React.Component {
   render() {
 
     return (
-      <div>
+      <div id="main-container">
         <TableFilters lsoas={this.props.data} update={this.setFilters} />
         <TableData headers={this.state.headers} resourceId={Meteor.settings.public.populationData} pipeline={this.state.pipeline}  />
       </div>

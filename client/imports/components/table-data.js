@@ -94,7 +94,7 @@ class TableData extends React.Component {
     );
 
     return(
-      <div>
+      <div id="table-container">
         <Table className="table" id="table" itemsPerPage={50} sortable={true}>
           <Thead>
               {headers}

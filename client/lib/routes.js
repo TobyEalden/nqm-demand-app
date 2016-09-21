@@ -7,6 +7,8 @@ import Layout from "../imports/containers/layout-container";
 import DemandApp from "../imports/containers/demand-container";
 import TableApp from "../imports/containers/table-container";
 import Counties from "../imports/components/county-view/counties";
+import { defaultState } from "../imports/functions/default-state";
+import { decode } from "../imports/functions/deep-links";
 
 
 // Register a trigger to be called before every route.
@@ -35,19 +37,21 @@ FlowRouter.route("/", {
 FlowRouter.route("/demand/:region?", {
   name: "demand",
   action: function(params, queryParams) {
-    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} name={queryParams.name} area={queryParams.area}/> ; }, region: params.region });
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
+    const initialState = defaultState(params.region, queryParams.name, queryParams.area);
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} region={params.region} initialState={initialState}/> ; }, region: params.region });
   }
 });
 
-// A county and/or lsoa has been selected, widget parameters are saved on url and passed in to the Demand component
-/*FlowRouter.route("/demand/:region/:year/:lsoa/:?", {
-  name: "demand",
+FlowRouter.route("/share/:region/:lsoa/:gender/:delta/:ageBand/:year/:population/:area/:name/:centre/:zoomed?", {
+  name: "share",
   action: function(params, queryParams) {
-    const pipeline='[{"$match":{"parent_id":"' + params.region + '"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
-    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(queryParams.centre)} /> ; } });
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
+    const initialState = decode(params);
+    mount(Layout, { content: function() { return <DemandApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} centre={JSON.parse(params.centre)} region={params.region} initialState={initialState}/> ; }, region: params.region });
   }
-});*/
+});
+
 
 FlowRouter.route("/tables/:region", {
   name: "tables",

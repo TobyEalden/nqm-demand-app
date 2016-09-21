@@ -2,7 +2,9 @@ import React from "react";
 import {Meteor} from "meteor/meteor";
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import { defaultState } from "../../functions/default-state";
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Share from 'material-ui/svg-icons/social/share';
+import { encode } from "../../functions/deep-links";
 import MapWidget from "../../containers/map-container";
 import PyramidWidget from "../../containers/pyramid-container";
 import TimelineWidget from "../../containers/timeline-container";
@@ -25,9 +27,10 @@ class Demand extends React.Component {
     this.setLsoa = this.setLsoa.bind(this);
     this.toggleMapMode = this.toggleMapMode.bind(this);
     this.setFilters = this.setFilters.bind(this);
+    this.share = this.share.bind(this);
 
-    this.state = defaultState(props.data, props.region, props.name, props.area);
-    console.log(this.state);
+    this.state = props.initialState;
+    this.state.widgets.map.filter.area_id["$in"] = props.data;
   }
 
   /* Update functions, if you add a new widget check carefully whether it needs to be updated, it's possibly 
@@ -91,9 +94,13 @@ class Demand extends React.Component {
 
   }
 
+  share() {
+    encode(this.props.region, this.state, this.props.centre);
+  }
+
   render() {    
     let widgets = this.state.widgets;
-
+    console.log(this.state);
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","year1":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][0] + '"]},"$persons",0]}},"year2":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][1] + '"]},"$persons",0]}}}}]';
     const timePipe = '[{"$match":{"area_id":' + JSON.stringify(widgets.timeline.filter.area_id) + ',"gender":' + JSON.stringify(widgets.timeline.filter.gender) + ',"age_band":' + JSON.stringify(widgets.timeline.filter.age_band) + '}},{"$group":{"_id":"$year","persons":{"$sum":"$persons"}}}]';
     
@@ -102,13 +109,13 @@ class Demand extends React.Component {
       <div id="main-container">
         <div id="map-container">
           <Card className="card controller-container">
-            <MapToggle update={this.toggleMapMode} />
-            <Filter update={this.setFilters}/>
+            <MapToggle update={this.toggleMapMode} initial={this.state.widgets.map.settings.delta}/>
+            <Filter update={this.setFilters} initial={this.state.widgets.map.filter}/>
             
           </Card>   
           <MapWidget wgtId="map" mapId={Meteor.settings.public.lsoaGeo} resourceId={Meteor.settings.public.populationData} mapFilter={{"properties.LSOA11CD":{"$in":this.props.data}}} pipeline={pipeline} filter={widgets.map.filter} options={widgets.map.options} centre={this.props.centre} update={this.setLsoa} settings={widgets.map.settings} />
           <Card className="card controller-container">
-            <YearSlider update={this.setYear}/>
+            <YearSlider update={this.setYear} initial={this.state.widgets.map.filter.year["$in"][1]}/>
           </Card> 
         </div>
         
@@ -117,7 +124,11 @@ class Demand extends React.Component {
           <PyramidWidget wgtId="pyramid" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} filter={widgets.pyramid.filter} options={widgets.pyramid.options} settings={widgets.pyramid.settings} />
           <TimelineWidget wgtId="timeline" resourceId={this.state.zoomed ? Meteor.settings.public.populationData : Meteor.settings.public.regionData} pipeline={timePipe}  />
           <MinimapWidget wgtId="minimap" mapId={this.state.zoomed ? Meteor.settings.public.lsoaGeo : Meteor.settings.public.countyGeo} mapFilter={widgets.minimap.filter} options={widgets.minimap.options} key={this.state.lsoa.id} />
+          <FloatingActionButton onClick={this.share}>
+            <Share />
+          </FloatingActionButton>
         </div>
+        
       </div>
     );
   }
@@ -127,8 +138,8 @@ Demand.propTypes = {
   data: React.PropTypes.array.isRequired,
   centre: React.PropTypes.object.isRequired,
   region: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
-  area: React.PropTypes.string.isRequired
+  initialState: React.PropTypes.object.isRequired
+
 }
 
 export default Demand;

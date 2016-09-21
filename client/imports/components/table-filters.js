@@ -48,9 +48,11 @@ class TableFilters extends React.Component {
   }
 
   updateBand(values) {
-    if ((values.indexOf("All Ages") != -1) && (values != "All Ages")) {
-      if (this.state.bands.indexOf("All Ages") != -1) values = values.replace("All Ages", "");
-      else values = "All Ages";
+    if (this.state.aggregates.age_band.selected) { // Prevent all ages and other selections if we are not aggregating
+      if ((values.indexOf("All Ages") != -1) && (values != "All Ages")) {
+        if (this.state.bands.indexOf("All Ages") != -1) values = values.replace("All Ages", "");
+        else values = "All Ages";
+      }
     }
     let state = _.clone(this.state);
     state.bands = values;
@@ -113,42 +115,52 @@ class TableFilters extends React.Component {
   render() {
  
     return (
-      <div id="controls">
-        <div className="filter-column">
-          <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
-
-          <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />   
-
-          <Checkbox id="age_band"
-            label="Aggregate Age Bands" 
-            defaultChecked={true}
-            onCheck={this.updateAggregates}
-          />
+      <div id="table-controls">
+        <div className="filter-row">
+          <div className="filter-column">
+            <Select multi simpleValue value={this.state.bands} placeholder="Select your age band(s)" options={this.state.bandOptions} onChange={this.updateBand} />
+          </div>
+          <div className="filter-column">
+            <RaisedButton id="all_ages" label="Select All" onClick={this.selectAllAges} />   
+            <Checkbox id="age_band"
+              label="Aggregate Age Bands" 
+              defaultChecked={true}
+              onCheck={this.updateAggregates}
+            />
+          </div>
         </div>
-        <div className="filter-column"> 
-          <Select multi simpleValue value={this.state.gender} placeholder="Select gender(s)" options={this.state.genderOptions} onChange={this.updateGender} />
-
-          <Checkbox id="gender"
-            label="Aggregate Genders" 
-            defaultChecked={true}
-            onCheck={this.updateAggregates}
-          />
+        <div className="filter-row">
+          <div className="filter-column"> 
+            <Select multi simpleValue value={this.state.gender} placeholder="Select gender(s)" options={this.state.genderOptions} onChange={this.updateGender} />
+          </div>
+          <div className="filter-column">
+            <Checkbox id="gender"
+              label="Aggregate Genders" 
+              defaultChecked={true}
+              onCheck={this.updateAggregates}
+            />
+          </div>
         </div>
-        <div className="filter-column"> 
-          <Select multi simpleValue value={this.state.lsoas} placeholder="Select LSOA(s)" options={this.state.lsoaOptions} onChange={this.updateLsoas} />
-
-          <RaisedButton id="all_lsoas" label="Select All" onClick={this.selectAllLsoas} />
-
-          <Checkbox id="_id"
-            label="Aggregate LSOAs" 
-            defaultChecked={false}
-            onCheck={this.updateAggregates}
-          />
+        <div className="filter-row">
+          <div className="filter-column"> 
+            <Select multi simpleValue value={this.state.lsoas} placeholder="Select LSOA(s)" options={this.state.lsoaOptions} onChange={this.updateLsoas} />
+          </div>
+          <div className="filter-column">
+            <RaisedButton id="all_lsoas" label="Select All" onClick={this.selectAllLsoas} />
+            <Checkbox id="_id"
+              label="Aggregate LSOAs" 
+              defaultChecked={false}
+              onCheck={this.updateAggregates}
+            />
+          </div>
         </div>
-        <div className="filter-column"> 
-          <Select multi simpleValue value={this.state.years} placeholder="Select Year(s)" options={this.state.yearOptions} onChange={this.updateYears} />      
-
-          <RaisedButton id="all_years" label="Select All" onClick={this.selectAllYears} /> 
+        <div className="filter-row">
+          <div className="filter-column"> 
+            <Select multi simpleValue value={this.state.years} placeholder="Select Year(s)" options={this.state.yearOptions} onChange={this.updateYears} />   
+          </div>
+          <div className="filter-column">    
+            <RaisedButton id="all_years" label="Select All" onClick={this.selectAllYears} /> 
+          </div>
         </div>
       </div>
     );
