@@ -5,6 +5,7 @@ import {FlowRouter} from "meteor/kadira:flow-router";
 import connectionManager from "../imports/connection-manager";
 import Layout from "../imports/containers/layout-container";
 import DemandApp from "../imports/containers/demand-container";
+import BuildEditor from "../imports/containers/build-container";
 import TableApp from "../imports/containers/table-container";
 import Counties from "../imports/components/county-view/counties";
 import { defaultState } from "../imports/functions/default-state";
@@ -58,6 +59,14 @@ FlowRouter.route("/tables/:region", {
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]'; 
     mount(Layout, { content: function() { return <TableApp resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline}  /> ; }, region: params.region });
+  }
+});
+
+FlowRouter.route("/build/:region", {
+  name:"builder",
+  action: function(params, queryParams) {
+    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
+    mount(Layout, { content: function() { return <BuildEditor resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} /> ; }, region: params.region });
   }
 });
 

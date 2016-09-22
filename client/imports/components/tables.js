@@ -40,7 +40,7 @@ class Tables extends React.Component {
     this.setFilters = this.setFilters.bind(this);
   }
 
-   setFilters(newFilter) {
+  setFilters(newFilter) {
 
     let headers = [{label:"Persons", key: "persons"}, {label:"Year", key: newFilter.aggregates._id.selected ? "_id" : "year"}];
 
