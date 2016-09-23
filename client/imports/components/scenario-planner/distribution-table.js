@@ -54,23 +54,22 @@ class DistributionTable extends React.Component {
   render() {
 
     const rows = _.map(this.props.data, (row) =>{
-      let maxValueFemale = 1;
-      let maxValueMale = 1;
+      let maxValue = 1;
       _.each(this.props.data, (item) => {
         if (item.age_band != row.age_band) {
-          if (item.lockedFemale) maxValueFemale -= item.female;
-          if (item.lockedMale) maxValueMale -= item.male;
+          if (item.lockedFemale) maxValue -= item.female;
+          if (item.lockedMale) maxValue -= item.male;
         }
       });
       return (
         <Tr key={row.range}>
           <Td column="lockedMale"><IconButton id={row.range} onClick={this.toggleLockMale}>{row.lockedMale ? <Locked /> : <Unlocked />}</IconButton></Td>
           <Td column="male">
-            <NumberField id={row.range} onChange={this.updateMale} minValue={0} maxValue={maxValueMale*100} allowNegative={false} value={row.male*100} disabled={!row.lockedMale}/>
+            <NumberField id={row.range} onChange={this.updateMale} minValue={0} maxValue={maxValue*100} allowNegative={false} value={row.male*100} disabled={!row.lockedMale}/>
           </Td>
           <Td column="age_band">{row.range}</Td>
           <Td column="female">
-            <NumberField id={row.range} onChange={this.updateFemale} minValue={0} maxValue={maxValueFemale*100} allowNegative={false} value={row.female*100} disabled={!row.lockedFemale}/>
+            <NumberField id={row.range} onChange={this.updateFemale} minValue={0} maxValue={maxValue*100} allowNegative={false} value={row.female*100} disabled={!row.lockedFemale}/>
           </Td>
           <Td column="lockedFemale"><IconButton id={row.range} onClick={this.toggleLockFemale}>{row.lockedFemale ? <Locked /> : <Unlocked />}</IconButton></Td>
         </Tr>

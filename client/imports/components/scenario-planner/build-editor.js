@@ -12,7 +12,7 @@ import LSOATable from "./lsoa-table";
 import DistributionTable from "./distribution-table";
 import PopulationTable from "./population-table";
 
-import { redistribute, redistributeMale, redistributeFemale } from "../../functions/ratio-calculator"; 
+import { redistribute, redistributePyramid } from "../../functions/ratio-calculator"; 
 
 import { genPoplets, getRecipe } from "../../functions/poplet-generator";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -33,11 +33,9 @@ class BuildEditor extends React.Component {
         return {range: band, male: defaultAllocation, female: defaultAllocation, lockedMale: false, lockedFemale: false};
       }),
       populations: [
-        //{year: 2016, population: 100}, {year:2017, population: 150}, {year:2018, population:300}
+        {year: 2016, population: 100}, {year:2017, population: 150}, {year:2018, population:300}
       ]
     }
-    
-
     this.addRegion = this.addRegion.bind(this);
     this.removeRegion = this.removeRegion.bind(this);
     this.lsoaLock = this.lsoaLock.bind(this);
@@ -110,14 +108,9 @@ class BuildEditor extends React.Component {
       if (band.range === id) return true;
       else return false;
     });
-    if (male) {
-      band.male = value;
-      age_bands = redistributeMale(age_bands);
-    }
-    else {
-      band.female = value;
-      age_bands = redistributeFemale(age_bands);
-    }
+    if (male) band.male = value;
+    else band.female = value;
+    age_bands = redistributePyramid(age_bands);
     this.setState({
       age_bands: age_bands
     });
@@ -129,14 +122,9 @@ class BuildEditor extends React.Component {
       if (band.range === id) return true;
       else return false;
     });
-    if (male) {
-      band.lockedMale = !band.lockedMale;
-      age_bands = redistributeMale(age_bands);
-    }
-    else {
-      band.lockedFemale = !band.lockedFemale;
-      age_bands = redistributeFemale(age_bands);
-    }
+    if (male) band.lockedMale = !band.lockedMale;
+    else band.lockedFemale = !band.lockedFemale;
+    age_bands = redistributePyramid(age_bands);
     this.setState({
       age_bands: age_bands
     });
@@ -181,6 +169,10 @@ class BuildEditor extends React.Component {
       accessToken: this.props.access  
     };
     const nqmindsTDX = new TDXApi(config);
+    nqmindsTDX.addDatasetData("HkgbMFKMT", genPoplets(this.state.lsoaData, this.state.populations, this.state.age_bands), (err, id) => {
+      if (err) console.log(err);
+      else console.log("wrote to dataset ", id);
+    });
 
   }
   render() {
@@ -220,7 +212,8 @@ class BuildEditor extends React.Component {
 }
 
 BuildEditor.propTypes = {
-  data: React.PropTypes.array.isRequired
+  data: React.PropTypes.array.isRequired,
+  access: React.PropTypes.string.isRequired
 };
 
 export default BuildEditor;

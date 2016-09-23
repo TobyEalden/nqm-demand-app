@@ -11,6 +11,8 @@ import Counties from "../imports/components/county-view/counties";
 import { defaultState } from "../imports/functions/default-state";
 import { decode } from "../imports/functions/deep-links";
 
+import ScenarioEditor from "../imports/components/scenario-planner/scenario-editor";
+
 
 // Register a trigger to be called before every route.
 FlowRouter.triggers.enter([function(context, redirect) {
@@ -66,9 +68,16 @@ FlowRouter.route("/build/:region", {
   name:"builder",
   action: function(params, queryParams) {
     const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
-    mount(Layout, { content: function() { return <BuildEditor resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} /> ; }, region: params.region });
+    mount(Layout, { content: function() { return <BuildEditor resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} access={queryParams.access_token}/> ; }, region: params.region });
   }
 });
+
+FlowRouter.route("/scenario", {
+  name: "scenario",
+  action: function(params, queryParams) {
+    mount(Layout, { content: function() { return <ScenarioEditor data={{name: "Test", region: "IDHERE"}}/>; }, region: params.region });
+  }
+}); 
 
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 
