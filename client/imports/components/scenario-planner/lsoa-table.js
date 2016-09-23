@@ -63,15 +63,18 @@ class LSOATable extends React.Component {
     });
 
     return (
-      <Table>
-        <Thead>
-          <Th column="area_id">LSOA ID</Th>
-          <Th column="ratio">Percentage</Th>
-          <Th column="locked">Locked</Th>
-          <Th column="delete">Delete</Th>
-        </Thead>
-        {rows}
-      </Table>
+      <div>
+        <Table>
+          <Thead>
+            <Th column="area_id">LSOA ID</Th>
+            <Th column="ratio">Percentage</Th>
+            <Th column="locked">Locked</Th>
+            <Th column="delete">Delete</Th>
+          </Thead>
+          {rows}
+        </Table>
+        <p>Add LSOAs by clicking on them on the map</p>
+      </div>
     );
   }
 

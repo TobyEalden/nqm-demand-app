@@ -1,5 +1,6 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
+import TDXApi from "nqm-api-tdx";
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import PopIcon from "material-ui/svg-icons/action/supervisor-account";
@@ -9,8 +10,13 @@ import DistIcon from "material-ui/svg-icons/av/equalizer";
 import MapWidget from "../../containers/build-map-container";
 import LSOATable from "./lsoa-table";
 import DistributionTable from "./distribution-table";
+import PopulationTable from "./population-table";
 
 import { redistribute, redistributeMale, redistributeFemale } from "../../functions/ratio-calculator"; 
+
+import { genPoplets, getRecipe } from "../../functions/poplet-generator";
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 _ = lodash;
 
@@ -25,7 +31,10 @@ class BuildEditor extends React.Component {
       ],
       age_bands: _.map(Meteor.settings.public.allAgeBands, (band) => {
         return {range: band, male: defaultAllocation, female: defaultAllocation, lockedMale: false, lockedFemale: false};
-      })
+      }),
+      populations: [
+        //{year: 2016, population: 100}, {year:2017, population: 150}, {year:2018, population:300}
+      ]
     }
     
 
@@ -35,6 +44,10 @@ class BuildEditor extends React.Component {
     this.lsoaUpdate = this.lsoaUpdate.bind(this);
     this.ageLock = this.ageLock.bind(this);
     this.ageUpdate = this.ageUpdate.bind(this);
+    this.popUpdate = this.popUpdate.bind(this);
+    this.removePop = this.removePop.bind(this);
+    this.addPop = this.addPop.bind(this);
+    this.save = this.save.bind(this);
   }
 
   addRegion(id, name) {
@@ -51,7 +64,7 @@ class BuildEditor extends React.Component {
     }
   }
 
-  removeRegion(id, name) {
+  removeRegion(id) {
 
     let lsoaData = _.clone(this.state.lsoaData);  
     _.remove(lsoaData, (lsoa) => {
@@ -128,6 +141,48 @@ class BuildEditor extends React.Component {
       age_bands: age_bands
     });
   }
+
+  popUpdate(id, population) {
+    console.log(id);
+    let populations = _.clone(this.state.populations);
+    let pop = _.find(populations, (pop) => {
+      if (pop.year === id) return true;
+      else return false;
+    });
+    pop.population = population;
+    this.setState({
+      populations: populations
+    });
+  }
+
+  removePop(id) {
+    let populations = _.clone(this.state.populations);  
+    _.remove(populations, (pop) => {
+      if (pop.year === id) return true;
+      else return false;
+    });
+    this.setState({
+      populations: populations
+    });
+  }
+
+  addPop(id, population) {
+    let populations = _.clone(this.state.populations); 
+    populations.push({year: id, population: population});
+    this.setState({
+      populations: populations
+    });
+  }
+
+  save() {
+    let config = {
+      commandHost: "https://cmd.nqminds.com",
+      queryHost: "https://q.nqminds.com",
+      accessToken: this.props.access  
+    };
+    const nqmindsTDX = new TDXApi(config);
+
+  }
   render() {
     return (
       <div id="main-container">
@@ -144,6 +199,7 @@ class BuildEditor extends React.Component {
               icon={<PopIcon />}
               label="Population"
             >
+              <PopulationTable update={this.popUpdate} data={this.state.populations} remove={this.removePop} add={this.addPop}/>
             </Tab>
             <Tab
               icon={<DistIcon />}
@@ -152,7 +208,11 @@ class BuildEditor extends React.Component {
               <DistributionTable update={this.ageUpdate} toggleLock={this.ageLock} data={this.state.age_bands} />
             </Tab>
           </Tabs>
+                <FloatingActionButton onClick={this.save}>
+          <ContentAdd />
+        </FloatingActionButton>
         </div>
+
       </div>
     );
   }
