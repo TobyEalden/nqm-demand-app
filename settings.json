@@ -13,5 +13,9 @@
     "years":["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"],
     "mapUsername": "nqmivan.12id4bh0",
     "mapPassword": "pk.eyJ1IjoibnFtaXZhbiIsImEiOiJjaXJsendoMHMwMDM3aGtuaGh2bWt5OXRvIn0.6iCk2i96NUucsyDlbnVtiA"    
+  },
+  "private": {
+    "shareKey": "BJeMKwDUT",
+    "shareSecret": "12345"
   }
 }

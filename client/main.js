@@ -5,4 +5,3 @@ Meteor.startup(function() {
   // Enable onTouchTap event.  
   injectTapEventPlugin();  
 });
-

@@ -10,8 +10,7 @@ import TableApp from "../imports/containers/table-container";
 import Counties from "../imports/components/county-view/counties";
 import { defaultState } from "../imports/functions/default-state";
 import { decode } from "../imports/functions/deep-links";
-
-import ScenarioEditor from "../imports/components/scenario-planner/scenario-editor";
+import ScenarioManager from "../imports/containers/scenario-manager-container";
 
 
 // Register a trigger to be called before every route.
@@ -64,18 +63,17 @@ FlowRouter.route("/tables/:region", {
   }
 });
 
-FlowRouter.route("/build/:region", {
+FlowRouter.route("/build/:region/:build", {
   name:"builder",
   action: function(params, queryParams) {
-    const pipeline='[{"$match":{"parent_id":"' + params.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
-    mount(Layout, { content: function() { return <BuildEditor resourceId={Meteor.settings.public.lsoaMapping} pipeline={pipeline} access={queryParams.access_token}/> ; }, region: params.region });
+    mount(Layout, { content: function() { return <BuildEditor resourceId={params.build} options={{limit: 2500}} filter={{}} access={queryParams.access_token} region={params.region}/> ; }, region: params.region });
   }
 });
 
-FlowRouter.route("/scenario", {
+FlowRouter.route("/scenarios", {
   name: "scenario",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <ScenarioEditor data={{name: "Test", region: "IDHERE"}}/>; }, region: params.region });
+    mount(Layout, { content: function() { return <ScenarioManager resourceId="SJx-IgF8a" options={{limit: 2500}} filter={{}} access={queryParams.access_token} />; }, region: params.region });
   }
 }); 
 

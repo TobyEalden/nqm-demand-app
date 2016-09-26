@@ -130,6 +130,18 @@ td {
   align-items: flex-start;
 }
 
+#scenario-container {
+  flex-grow: 1;
+  flex-basis: 400px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
 .wgt-card {
     flex-basis: 400px;
     height: 300px;
