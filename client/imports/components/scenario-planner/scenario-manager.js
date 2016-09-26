@@ -7,6 +7,7 @@ import { HTTP } from "meteor/http";
 import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
 import Add from 'material-ui/svg-icons/content/add';
+import AutoComplete from 'material-ui/AutoComplete';
 
 import ScenarioEditor from "../../containers/scenario-container";
 
@@ -56,7 +57,7 @@ class ScenarioManager extends React.Component {
         const data = {
           scenario_name: this.state.newName,
           scenario_folder: response.data.response.id,
-          parent_area_code: "",
+          parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
           base_population_datasetId: ""
         };
         postData = {
@@ -93,13 +94,24 @@ class ScenarioManager extends React.Component {
       "schemaDefinition.basedOn": "PlanningPoplet",
       "parents": {"$eq":this.props.data[this.state.scenario].scenario_folder}
     };
+    // Dummy Data
+    const regionList = [{textKey: "Hampshire", valueKey: "SkxbDChh_"}];
+    const dataSourceConfig = {
+      text: 'textKey',
+      value: 'valueKey',
+    };
     return( 
       <div id="main-container">
         <div id="widget-container">
           <List>
             {scenarios}
           </List>
-          <TextField id="scenario-name" hintText="Add New Scenario" value={this.state.newName} onChange={this.newName}/>
+          <TextField id="scenario-name" hintText="New Scenario Name" value={this.state.newName} onChange={this.newName}/>
+          <AutoComplete hintText="New Scenario Base Population"
+            filter={AutoComplete.fuzzyFilter}
+            dataSource={regionList}
+            dataSourceConfig={dataSourceConfig}
+          />
           <Add onClick={this.addScenario}/>
         </div>
 

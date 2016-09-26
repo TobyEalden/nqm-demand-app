@@ -31,7 +31,7 @@ FlowRouter.triggers.enter([function(context, redirect) {
 FlowRouter.route("/", {
   name: "root",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <Counties />; }, region: "E07000091" });
+    mount(Layout, { content: function() { return <Counties />; }, region: "E07000091" }); // Dummy Data
   }
 });
 
@@ -72,7 +72,7 @@ FlowRouter.route("/build/:region/:id", {
 
 FlowRouter.route("/scenarios", {
   name: "scenario",
-  action: function(params, queryParams) {// the resourceID here refers to a list of scenarios, this should be use specific and is only hard coded for testing purposes
+  action: function(params, queryParams) {// Dummy Data the resourceID here refers to a list of scenarios, this should be use specific and is only hard coded for testing purposes
     mount(Layout, { content: function() { return <ScenarioManager resourceId="SJx-IgF8a" options={{limit: 2500}} filter={{}} />; }, region: params.region });
   }
 }); 

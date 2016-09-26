@@ -5,7 +5,7 @@ import connectionManager from "../connection-manager";
 // options - options to tweak the returned data, e.g. { sort: { timestamp: -1 }, limit: 10, fields: {temperature: 1}} will sort by timestamp descending, limit the result to 10 items, and only return the temperature field in each document.
 function loadResourceData({resourceId, filter, options}, onData) {
   //console.log("loadResourceData: ", resourceId, filter, options);
-    
+    console.log("hi");
 
   // Subscribe to the datasetData publication using the given filter and options.
   // The subscription will automatically re-run if any of the parameters change (i.e. resourceId, filter or options).
