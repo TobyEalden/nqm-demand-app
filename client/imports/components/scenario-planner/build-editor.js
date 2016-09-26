@@ -1,6 +1,6 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
-import TDXApi from "nqm-api-tdx";
+import connectionManager from "../../connection-manager";
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import PopIcon from "material-ui/svg-icons/action/supervisor-account";
@@ -153,11 +153,11 @@ class BuildEditor extends React.Component {
   }
 
   save() {
-    var postData = {
+    const postData = {
       datasetId: this.props.resourceId,
       payload: [].concat(genPoplets(this.state.lsoaData, this.state.populations, this.state.age_bands))    
     };
-    const headers = { authorization: "Bearer " + this.props.access };
+    const headers = { authorization: "Bearer " + connectionManager.authToken };
     let url = "https://cmd.nqminds.com/commandSync/resource/truncate";
     HTTP.call("POST", url, { headers: headers, data: {id: this.props.resourceId} }, function(err, response) {
       if (err) {
@@ -214,7 +214,6 @@ class BuildEditor extends React.Component {
 
 BuildEditor.propTypes = {
   data: React.PropTypes.array.isRequired,
-  access: React.PropTypes.string.isRequired,
   region: React.PropTypes.string.isRequired,
   resourceId: React.PropTypes.string.isRequired
 };

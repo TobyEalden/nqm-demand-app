@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import { Meteor } from "meteor/meteor";
-import TDXApi from "nqm-api-tdx";
+import connectionManager from "../../connection-manager";
 
 import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
@@ -14,6 +14,7 @@ class ScenarioEditor extends React.Component {
     super(props);
     this.createBuild = this.createBuild.bind(this);
     this.newName = this.newName.bind(this);
+    this.openBuild = this.openBuild.bind(this);
     this.state = {
       newName: ""
     }
@@ -21,7 +22,7 @@ class ScenarioEditor extends React.Component {
 
   createBuild() {
     const postData = { name: this.state.newName, parentId: this.props.folder, basedOnSchema: "PlanningPoplet"};
-    const headers = { authorization: "Bearer " + this.props.access };
+    const headers = { authorization: "Bearer " + connectionManager.authToken };
     const url = "https://cmd.nqminds.com/commandSync/resource/create";
     HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
       if (err) {
@@ -42,24 +43,32 @@ class ScenarioEditor extends React.Component {
     });
   }
 
+  openBuild(event) {
+    let found = false;
+    let elem = event.target.parentNode;
+    while (!found) {
+      if (elem.id != "") found = true;
+      else elem = elem.parentNode;
+    }
+    FlowRouter.go("build", {region: this.props.region, id: elem.id});
+
+  }
+
   render() {
 
     const builds = _.map(this.props.data, (build) => {
       return (
          <ListItem
-          key={build.name}
-          leftCheckbox={<Checkbox />}
+          key={build.id}
+          id={build.id}
+          onTouchTap={this.openBuild}
           primaryText={build.name}
           />
       );
     });
-
     return (
       <div id="scenario-container">
-        <TextField
-          id="name"
-          defaultValue={this.props.name}
-        /><br />
+        <p>{this.props.name}</p><br />
         <p>Region: {this.props.region}</p>
         <List>
           {builds}

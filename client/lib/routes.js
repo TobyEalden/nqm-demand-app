@@ -63,17 +63,17 @@ FlowRouter.route("/tables/:region", {
   }
 });
 
-FlowRouter.route("/build/:region/:build", {
-  name:"builder",
+FlowRouter.route("/build/:region/:id", {
+  name:"build",
   action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <BuildEditor resourceId={params.build} options={{limit: 2500}} filter={{}} access={queryParams.access_token} region={params.region}/> ; }, region: params.region });
+    mount(Layout, { content: function() { return <BuildEditor resourceId={params.id} options={{limit: 2500}} filter={{}} region={params.region}/> ; }, region: params.region });
   }
 });
 
 FlowRouter.route("/scenarios", {
   name: "scenario",
-  action: function(params, queryParams) {
-    mount(Layout, { content: function() { return <ScenarioManager resourceId="SJx-IgF8a" options={{limit: 2500}} filter={{}} access={queryParams.access_token} />; }, region: params.region });
+  action: function(params, queryParams) {// the resourceID here refers to a list of scenarios, this should be use specific and is only hard coded for testing purposes
+    mount(Layout, { content: function() { return <ScenarioManager resourceId="SJx-IgF8a" options={{limit: 2500}} filter={{}} />; }, region: params.region });
   }
 }); 
 
