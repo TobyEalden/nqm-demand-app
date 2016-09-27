@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Tr, Thead, Th, Td } from "Reactable";
+import { Table, Tr, Thead, Th, Td } from "reactable";
 import stringify from "csv-stringify";
 import RaisedButton from 'material-ui/RaisedButton';
 

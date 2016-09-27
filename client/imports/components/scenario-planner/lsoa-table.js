@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Table, Tr, Thead, Th, Td } from "Reactable";
+import { Table, Tr, Thead, Th, Td } from "reactable";
 import NumberField from 'react-number-field';
 import IconButton from 'material-ui/IconButton';
 import Locked from "material-ui/svg-icons/action/lock";
