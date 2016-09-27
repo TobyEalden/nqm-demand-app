@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Tr, Thead, Th, Td } from "reactable";
 import stringify from "csv-stringify";
-import RaisedButton from "material-ui/RaisedButton";
+import RaisedButton from 'material-ui/RaisedButton';
 
 _ = lodash;
 
@@ -95,7 +95,7 @@ class TableData extends React.Component {
 
     return(
       <div id="table-container">
-        <Table className="table" id="table" itemsPerPage={50} sortable={true}>
+        <Table className="table" id="table" itemsPerPage={20} sortable={true}>
           <Thead>
               {headers}
           </Thead>

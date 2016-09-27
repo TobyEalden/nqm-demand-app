@@ -26,7 +26,8 @@ class ScenarioManager extends React.Component {
       scenario: 0,
       newName: "",
       open: false,
-      message: "Scenario Added"
+      message: "Scenario Added",
+      error:""
     }
   }
 
@@ -49,10 +50,9 @@ class ScenarioManager extends React.Component {
   }
 
   addScenario() {
-    if (this.state.newName === "") {
+    if ((this.state.newName) === "" || (this.state.newName.length < 6)) {
       this.setState({
-        open: true,
-        message: "Not a valid scenario name"
+        error: "Please enter at least six characters"
       });
     }
     else {
@@ -64,11 +64,11 @@ class ScenarioManager extends React.Component {
           console.log("Failed to create build: ", err);
           this.setState({
             open: true,
-            message: "Failed to create scenario: " + err
+            message: "Failed to create scenario: " + err,
+            error: ""
           });
         } 
         else {
-          console.log(response);
           const data = {
             scenario_name: this.state.newName,
             scenario_folder: response.data.response.id,
@@ -84,13 +84,15 @@ class ScenarioManager extends React.Component {
             if (err) {
               this.setState({
                 open: true,
-                message: "Failed to create scenario: " + err
+                message: "Failed to create scenario: " + err,
+                error: ""
               });
             } else {
               this.setState({
                 newName: "",
                 open: true,
-                message: "Created scenario"
+                message: "Created scenario",
+                error: ""
               });
             }
           });     
@@ -98,6 +100,10 @@ class ScenarioManager extends React.Component {
       });
     }
 
+  }
+  componentWillReceiveProps(props) {
+    console.log("will receive props");
+    console.log(props);
   }
 
   handleRequestClose() {
@@ -133,7 +139,7 @@ class ScenarioManager extends React.Component {
           <List>
             {scenarios}
           </List>
-          <TextField id="scenario-name" hintText="New Scenario Name" value={this.state.newName} onChange={this.newName}/>
+          <TextField id="scenario-name" hintText="New Scenario Name" value={this.state.newName} onChange={this.newName} errorText={this.state.error}/>
           <AutoComplete hintText="New Scenario Base Population"
             filter={AutoComplete.fuzzyFilter}
             dataSource={regionList}

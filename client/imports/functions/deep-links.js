@@ -3,7 +3,7 @@ import { Meteor } from "meteor/meteor";
 _ = lodash;
 
 function encode(region, state, centre) {
-  let link = "/" + region + "/";
+  let link = Meteor.settings.public.siteURL + "/share/" + region + "/";
   link += state.lsoa.id + "/";
   if (state.widgets.map.filter.gender["$in"].length === 2) link += "b";
   else if (state.widgets.map.filter.gender["$in"].indexOf("male") != -1) link += "m";
@@ -25,7 +25,7 @@ function encode(region, state, centre) {
   link += "/" + encodeURI(state.lsoa.name);
   link += "/" + JSON.stringify(centre) + "/";
   link += state.zoomed ? "t" : "f";
-  console.log(link);
+  return link;
 }
 
 

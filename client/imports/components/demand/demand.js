@@ -1,10 +1,12 @@
 import React from "react";
 import {Meteor} from "meteor/meteor";
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Share from 'material-ui/svg-icons/social/share';
-import { encode } from "../../functions/deep-links";
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from "material-ui/Card";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import Share from "material-ui/svg-icons/social/share";
+import Dialog from "material-ui/Dialog";
+import FlatButton from "material-ui/FlatButton";
+
 import MapWidget from "../../containers/map-container";
 import PyramidWidget from "../../containers/pyramid-container";
 import TimelineWidget from "../../containers/timeline-container";
@@ -14,6 +16,7 @@ import YearSlider from "./year-slider";
 import MapToggle from "./map-toggle";
 import Filter from "./filters";
 
+import { encode } from "../../functions/deep-links";
 
 _ = lodash;
 
@@ -28,6 +31,7 @@ class Demand extends React.Component {
     this.toggleMapMode = this.toggleMapMode.bind(this);
     this.setFilters = this.setFilters.bind(this);
     this.share = this.share.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
 
     this.state = props.initialState;
     this.state.widgets.map.filter.area_id["$in"] = props.data;
@@ -95,9 +99,17 @@ class Demand extends React.Component {
   }
 
   share() {
-    encode(this.props.region, this.state, this.props.centre);
+    this.setState({
+      open: true,
+      shareLink: encode(this.props.region, this.state, this.props.centre)
+    });
   }
 
+  closeDialog() {
+    this.setState({
+      open: false
+    });
+  }
   render() {    
     let widgets = this.state.widgets;
     const pipeline = '[{"$match":{"area_id":{"$in":' + JSON.stringify(this.props.data) + '},"year":' + JSON.stringify(widgets.map.filter.year) + ',"gender":' + JSON.stringify(widgets.map.filter.gender) + ',"age_band":' + JSON.stringify(widgets.map.filter.age_band) + '}},{"$group":{"_id":"$area_id","year1":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][0] + '"]},"$persons",0]}},"year2":{"$sum":{"$cond":[{"$eq":["$year","' + widgets.map.filter.year["$in"][1] + '"]},"$persons",0]}}}}]';
@@ -127,7 +139,15 @@ class Demand extends React.Component {
             <Share />
           </FloatingActionButton>
         </div>
-        
+        <Dialog
+          title="Share View"
+          actions={<FlatButton label="Close" primary={true} onTouchTap={this.closeDialog}/>}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.closeDialog}
+        >
+          {this.state.shareLink}
+        </Dialog>
       </div>
     );
   }

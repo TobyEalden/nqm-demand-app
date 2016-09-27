@@ -91,7 +91,9 @@ function defaultState(region, name, area) {
       population: 0,
       area: area
     },
-    zoomed: false
+    zoomed: false,
+    open: false,
+    shareLink: ""
   };
 
   return state;

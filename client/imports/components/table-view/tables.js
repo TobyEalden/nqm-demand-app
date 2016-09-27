@@ -1,7 +1,7 @@
 import React from "react";
 import { Meteor } from "meteor/meteor"
 
-import TableData from "../containers/table-data-container";
+import TableData from "../../containers/table-data-container";
 import TableFilters from "./table-filters";
 
 _ = lodash;
@@ -53,10 +53,10 @@ class Tables extends React.Component {
     if (!newFilter.aggregates._id.selected) headers.push({label:"Area Name", key:"area_name"});
 
     let filter = _.cloneDeep(this.state.filter);
-    filter.gender["$in"] = newFilter.gender.split(",");
-    filter.age_band["$in"] = newFilter.bands.split(",");
-    filter.area_id["$in"] = newFilter.lsoas.split(",");
-    filter.year["$in"] = newFilter.years.split(",");
+    filter.gender["$in"] = newFilter.gender;
+    filter.age_band["$in"] = newFilter.bands;
+    filter.area_id["$in"] = newFilter.lsoas;
+    filter.year["$in"] = newFilter.years;
 
     let pipeline = '[{"$match":{"area_id":' + JSON.stringify(filter.area_id) + ',"gender":' + JSON.stringify(filter.gender) + ',"age_band":' + JSON.stringify(filter.age_band) + ',"year":' + JSON.stringify(filter.year) + '}},{"$group":{"_id":';
     pipeline += newFilter.aggregates._id.selected ? '{"year":"$year"' : '{"area_id":"$area_id","year":"$year"';

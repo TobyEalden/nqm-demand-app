@@ -183,7 +183,7 @@ td {
     flex-basis: 400px;
     padding: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
     align-content: flex-start;
@@ -194,27 +194,55 @@ td {
     flex-basis: 400px;
     padding: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
     align-items: flex-start;
 }
-.filter-column {
-    flex-basis: 40%;
-    margin-right:10%;
-}
 
-.filter-row { 
-    flex-grow: 1;
-    flex-basis: 100px;
+.control-set {
+    padding: 20px;
+    margin: 5px;
     display: flex;
-    flex-direction: row;
+    min-width: 200px;
+    max-width: 400px;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-between;
     align-content: flex-start;
     align-items: flex-start;
 }
+
+.control-select {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.control-chips {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.control-buttons {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+
+}
+
+
 
 .tab-container {
     flex-grow: 1;
@@ -226,6 +254,10 @@ td {
     align-content: flex-start;
     align-items: flex-start;
 }
+
+
+
+
 
 /* Side Menu */
 
