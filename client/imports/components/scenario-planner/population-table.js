@@ -1,7 +1,7 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
 
-import { Table, Tr, Thead, Th, Td } from "Reactable";
+import { Table, Tr, Thead, Th, Td } from "reactable";
 import NumberField from 'react-number-field';
 import IconButton from 'material-ui/IconButton';
 import Delete from "material-ui/svg-icons/action/delete";
