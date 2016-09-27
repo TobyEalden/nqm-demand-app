@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
 import Add from 'material-ui/svg-icons/content/add';
 import AutoComplete from 'material-ui/AutoComplete';
+import Snackbar from 'material-ui/Snackbar';
 
 import ScenarioEditor from "../../containers/scenario-container";
 
@@ -20,9 +21,12 @@ class ScenarioManager extends React.Component {
     this.changeScenario = this.changeScenario.bind(this);
     this.addScenario = this.addScenario.bind(this);
     this.newName = this.newName.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.state = {
       scenario: 0,
-      newName: ""
+      newName: "",
+      open: false,
+      message: "Scenario Added"
     }
   }
 
@@ -45,39 +49,62 @@ class ScenarioManager extends React.Component {
   }
 
   addScenario() {
-    let postData = { name: this.state.newName, parentId: "H1WOCJFUT", basedOnSchema: "resourceGroup"};
-    const headers = { authorization: "Bearer " + connectionManager.authToken };
-    let url = "https://cmd.nqminds.com/commandSync/resource/create";
-    HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
-      if (err) {
-        console.log("Failed to create build: ", err);
-      } 
-      else {
-        console.log(response);
-        const data = {
-          scenario_name: this.state.newName,
-          scenario_folder: response.data.response.id,
-          parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
-          base_population_datasetId: ""
-        };
-        postData = {
-          datasetId: this.props.resourceId,
-          payload: [].concat(data)    
-        };
-        url = "https://cmd.nqminds.com/commandSync/dataset/data/createMany";
-        HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
-          if (err) {
-            console.log("Failed to get data: ", err);
-          } else {
-            console.log("wrote to dataset");
-            this.setState({
-              newName: ""
-            });
-          }
-        });     
-      }
-    });
+    if (this.state.newName === "") {
+      this.setState({
+        open: true,
+        message: "Not a valid scenario name"
+      });
+    }
+    else {
+      let postData = { name: this.state.newName, parentId: "H1WOCJFUT", basedOnSchema: "resourceGroup"};
+      const headers = { authorization: "Bearer " + connectionManager.authToken };
+      let url = "https://cmd.nqminds.com/commandSync/resource/create";
+      HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+        if (err) {
+          console.log("Failed to create build: ", err);
+          this.setState({
+            open: true,
+            message: "Failed to create scenario: " + err
+          });
+        } 
+        else {
+          console.log(response);
+          const data = {
+            scenario_name: this.state.newName,
+            scenario_folder: response.data.response.id,
+            parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
+            base_population_datasetId: ""
+          };
+          postData = {
+            datasetId: this.props.resourceId,
+            payload: [].concat(data)    
+          };
+          url = "https://cmd.nqminds.com/commandSync/dataset/data/createMany";
+          HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+            if (err) {
+              this.setState({
+                open: true,
+                message: "Failed to create scenario: " + err
+              });
+            } else {
+              this.setState({
+                newName: "",
+                open: true,
+                message: "Created scenario"
+              });
+            }
+          });     
+        }
+      });
+    }
+
   }
+
+  handleRequestClose() {
+    this.setState({
+      open: false
+    });
+  };
 
   render() {
     const scenarios = _.map(this.props.data, (scenario, index) => {
@@ -111,11 +138,18 @@ class ScenarioManager extends React.Component {
             filter={AutoComplete.fuzzyFilter}
             dataSource={regionList}
             dataSourceConfig={dataSourceConfig}
+            openOnFocus={true}
           />
           <Add onClick={this.addScenario}/>
         </div>
 
         <ScenarioEditor options={{limit: 1000}} filter={filter} folder={this.props.data[this.state.scenario].scenario_folder} name={this.props.data[this.state.scenario].scenario_name} region={this.props.data[this.state.scenario].parent_area_code}/>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
 
      
       </div>

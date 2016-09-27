@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
 import Add from 'material-ui/svg-icons/content/add';
 import Checkbox from 'material-ui/Checkbox';
+import Snackbar from 'material-ui/Snackbar';
 
 class ScenarioEditor extends React.Component {
 
@@ -15,26 +16,41 @@ class ScenarioEditor extends React.Component {
     this.createBuild = this.createBuild.bind(this);
     this.newName = this.newName.bind(this);
     this.openBuild = this.openBuild.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.state = {
-      newName: ""
+      newName: "",
+      open: false,
+      message: "Scenario Added"
     }
   }
 
   createBuild() {
-    const postData = { name: this.state.newName, parentId: this.props.folder, basedOnSchema: "PlanningPoplet"};
-    const headers = { authorization: "Bearer " + connectionManager.authToken };
-    const url = "https://cmd.nqminds.com/commandSync/resource/create";
-    HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
-      if (err) {
-        console.log("Failed to create build: ", err);
-      } 
-      else {
-        console.log("Created build");
-        this.setState({
-          newName: ""
-        });
+    if (this.state.newName === "") {
+      this.setState({
+        open: true,
+        message: "Not a valid scenario name"
+      });
+    }
+    else {
+      const postData = { name: this.state.newName, parentId: this.props.folder, basedOnSchema: "PlanningPoplet"};
+      const headers = { authorization: "Bearer " + connectionManager.authToken };
+      const url = "https://cmd.nqminds.com/commandSync/resource/create";
+      HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+        if (err) {
+          this.setState({
+            open: true,
+            message: "Failed to create build: " + err
+          });
+        } 
+        else {
+          this.setState({
+            newName: "",
+            open: true,
+            message: "Created build"
+          });
+        }
+      });
       }
-    });
   }
 
   newName(event) {
@@ -53,6 +69,11 @@ class ScenarioEditor extends React.Component {
     FlowRouter.go("build", {region: this.props.region, id: elem.id});
 
   }
+  handleRequestClose() {
+    this.setState({
+      open: false
+    });
+  };
 
   render() {
 
@@ -75,6 +96,12 @@ class ScenarioEditor extends React.Component {
         </List>
         <TextField ref="buildName" hintText="Add New Build" value={this.state.newName} onChange={this.newName}/>
         <Add onClick={this.createBuild}/>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
 
     );

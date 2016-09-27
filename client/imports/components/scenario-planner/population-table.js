@@ -52,7 +52,7 @@ class PopulationTable extends React.Component {
       let increase = true;
       if (delta < 0) increase = false;
       let deletable = false;
-      if ((index === 0) || (index === (this.props.data.length - 1))) deletable = true;
+      if (index === (this.props.data.length - 1)) deletable = true;
 
       return (
         <Tr key={row.year}>
