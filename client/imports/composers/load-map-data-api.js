@@ -11,7 +11,8 @@ function loadMapData({mapId, mapFilter, options}, onData) {
   const api = new TDXApi(config);
 
   api.getDatasetData(mapId, mapFilter, null, options, (err, response) => {
-    onData(null, {data: response.data});
+    if (err) console.log("Failed to get map data: ", err);
+    else onData(null, {geoData: response.data});
   });
 }
 

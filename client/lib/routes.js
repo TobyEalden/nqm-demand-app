@@ -11,6 +11,7 @@ import Counties from "../imports/components/county-view/counties";
 import { defaultState } from "../imports/functions/default-state";
 import { decode } from "../imports/functions/deep-links";
 import ScenarioManager from "../imports/containers/scenario-manager-container";
+import ScenarioGenerator from "../imports/containers/scenario-generator-container";
 
 
 // Register a trigger to be called before every route.
@@ -76,6 +77,13 @@ FlowRouter.route("/scenarios", {
     mount(Layout, { content: function() { return <ScenarioManager resourceId="SJx-IgF8a" options={{limit: 2500}} filter={{}} />; }, region: params.region });
   }
 }); 
+
+FlowRouter.route("/generate", {
+  name: "generate",
+  action: function(params, queryParams) {
+    mount(Layout, { content: function() { return <ScenarioGenerator folderId="r1xw5_tMT" basePopId="SkxbDChh_" />; }, region: params.region });
+  }
+});
 
 
 // Redirect to the TDX auth server - as configured in the "authServerURL" property in settings.json 

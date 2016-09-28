@@ -14,6 +14,7 @@ function loadMapData({mapId, mapFilter, options, filter, pipeline, resourceId, c
     if (err) console.log("Failed to get data: ", err);
     else {
       const geoData = response.data;
+      console.log(response);
       api.getAggregateData(resourceId, pipeline, {limit: 5000}, (err, response) => {
         if (err) console.log("Failed to get data: ", err);
         else onData(null, {data: response.data, geoData: geoData});

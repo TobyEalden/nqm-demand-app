@@ -71,12 +71,14 @@ class ScenarioManager extends React.Component {
           });
         } 
         else {
+          
           const data = {
             scenario_name: this.state.newName,
-            scenario_folder: response.data.response.id,
+            scenario_folder: id.id,
             parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
             base_population_datasetId: ""
           };
+          console.log(data);
           api.addDatasetData(this.props.resourceId, data, (err, response) => {
             if (err) {
               this.setState({
@@ -128,31 +130,6 @@ class ScenarioManager extends React.Component {
       value: 'valueKey',
     };
 
-
-
-
-
-
-    const config = {
-      commandHost: "https://cmd.nqminds.com",
-      queryHost: "https://q.nqminds.com"  
-    };
-
-    const nqmindsTDX = new TDXApi(config);
-
-    // Authenticate using token id and secret (from the toolbox)
-    nqmindsTDX.authenticate("BJeMKwDUT","12345", function(err, accessToken) {
-      if (err) {
-
-      } else {
-        // Create a dataset.
-        nqmindsTDX.getDataset("SJx-IgF8a", function(err,data) {
-        if (err) console.log(err);
-        else console.log(data);
-
-      });
-      }  
-    });
     return( 
       <div id="main-container">
         <div id="widget-container">
