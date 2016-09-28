@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import { Meteor } from "meteor/meteor";
 import connectionManager from "../../connection-manager";
+import TDXApi from "nqm-api-tdx/client-api";
 
 import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
@@ -25,17 +26,20 @@ class ScenarioEditor extends React.Component {
   }
 
   createBuild() {
-    if (this.state.newName === "") {
+    if (this.state.newName === "" || (this.state.newName.length < 6)) {
       this.setState({
         open: true,
-        message: "Not a valid scenario name"
+        message: "Please enter at least six characters"
       });
     }
     else {
-      const postData = { name: this.state.newName, parentId: this.props.folder, basedOnSchema: "PlanningPoplet"};
-      const headers = { authorization: "Bearer " + connectionManager.authToken };
-      const url = "https://cmd.nqminds.com/commandSync/resource/create";
-      HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+      const config = {
+        commandHost: Meteor.settings.public.commandHost,
+        queryHost: Meteor.settings.public.queryHost,
+        accessToken: connectionManager.authToken
+      };
+      const api = new TDXApi(config);
+      api.createDataset({ name: this.state.newName, parentId: this.props.folder, basedOnSchema: "PlanningPoplet"}, (err,id) => {
         if (err) {
           this.setState({
             open: true,
@@ -50,7 +54,7 @@ class ScenarioEditor extends React.Component {
           });
         }
       });
-      }
+    }
   }
 
   newName(event) {

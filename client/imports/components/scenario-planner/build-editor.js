@@ -1,6 +1,7 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
 import connectionManager from "../../connection-manager";
+import TDXApi from "nqm-api-tdx/client-api";
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import PopIcon from "material-ui/svg-icons/action/supervisor-account";
@@ -18,7 +19,6 @@ import { genPoplets, getRecipe } from "../../functions/poplet-generator";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-import { HTTP } from "meteor/http";
 
 _ = lodash;
 
@@ -153,27 +153,21 @@ class BuildEditor extends React.Component {
   }
 
   save() {
-    const postData = {
-      datasetId: this.props.resourceId,
-      payload: [].concat(genPoplets(this.state.lsoaData, this.state.populations, this.state.age_bands))    
+    const config = {
+      commandHost: Meteor.settings.public.commandHost,
+      queryHost: Meteor.settings.public.queryHost,
+      accessToken: connectionManager.authToken
     };
-    const headers = { authorization: "Bearer " + connectionManager.authToken };
-    let url = "https://cmd.nqminds.com/commandSync/resource/truncate";
-    HTTP.call("POST", url, { headers: headers, data: {id: this.props.resourceId} }, function(err, response) {
-      if (err) {
-        console.log("Failed to erase data: ", err);
-      } else {
-        url = "https://cmd.nqminds.com/commandSync/dataset/data/upsertMany";
-        HTTP.call("POST", url, { headers: headers, data: postData }, function(err, response) {
-          if (err) {
-            console.log("Failed to get data: ", err);
-          } else {
-            console.log("wrote to dataset");
-          }
+    const api = new TDXApi(config);
+    api.truncateDataset(this.props.resourceId, (err, response) => {
+      if (err) console.log("Failed to erase data: ", err);
+      else {
+        api.addDatasetData(this.props.resourceId, genPoplets(this.state.lsoaData, this.state.populations, this.state.age_bands), (err, response) => {
+          if (err) console.log("Failed to write data: ", err);
+          else console.log("wrote to dataset");
         });
       }
-    });
-    
+    });    
   }
   render() {
     const pipeline='[{"$match":{"parent_id":"' + this.props.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';

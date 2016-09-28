@@ -3,6 +3,8 @@
     "ddpServerURL": "https://tbx.nqminds.com/",
     "authServerURL": "https://tdx.nqminds.com",
     "queryURL": "https://q.nqminds.com/v1/",
+    "commandHost": "https://cmd.nqminds.com",
+    "queryHost": "https://q.nqminds.com",
     "countyGeo": "rygisHks5",
     "lsoaMapping": "BkWqQQuBo",
     "populationData": "SkxbDChh_",

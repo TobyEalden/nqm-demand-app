@@ -1,8 +1,7 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
 import connectionManager from "../../connection-manager";
-
-import { HTTP } from "meteor/http";
+import TDXApi from "nqm-api-tdx/client-api";
 
 import TextField from 'material-ui/TextField';
 import {List, ListItem} from 'material-ui/List';
@@ -56,12 +55,15 @@ class ScenarioManager extends React.Component {
       });
     }
     else {
-      let postData = { name: this.state.newName, parentId: "H1WOCJFUT", basedOnSchema: "resourceGroup"};
-      const headers = { authorization: "Bearer " + connectionManager.authToken };
-      let url = "https://cmd.nqminds.com/commandSync/resource/create";
-      HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+      const config = {
+        commandHost: Meteor.settings.public.commandHost,
+        queryHost: Meteor.settings.public.queryHost,
+        accessToken: connectionManager.authToken
+      };
+      const api = new TDXApi(config);
+      // Dummy code - placeholder for parent ID
+      api.createDataset({ name: this.state.newName, parentId: "H1WOCJFUT", basedOnSchema: "resourceGroup"}, (err,id) => {
         if (err) {
-          console.log("Failed to create build: ", err);
           this.setState({
             open: true,
             message: "Failed to create scenario: " + err,
@@ -75,19 +77,15 @@ class ScenarioManager extends React.Component {
             parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
             base_population_datasetId: ""
           };
-          postData = {
-            datasetId: this.props.resourceId,
-            payload: [].concat(data)    
-          };
-          url = "https://cmd.nqminds.com/commandSync/dataset/data/createMany";
-          HTTP.call("POST", url, { headers: headers, data: postData }, (err, response) => {
+          api.addDatasetData(this.props.resourceId, data, (err, response) => {
             if (err) {
               this.setState({
                 open: true,
                 message: "Failed to create scenario: " + err,
                 error: ""
               });
-            } else {
+            }
+            else {
               this.setState({
                 newName: "",
                 open: true,
@@ -95,16 +93,12 @@ class ScenarioManager extends React.Component {
                 error: ""
               });
             }
-          });     
+          });
         }
       });
     }
+  }
 
-  }
-  componentWillReceiveProps(props) {
-    console.log("will receive props");
-    console.log(props);
-  }
 
   handleRequestClose() {
     this.setState({
@@ -133,6 +127,32 @@ class ScenarioManager extends React.Component {
       text: 'textKey',
       value: 'valueKey',
     };
+
+
+
+
+
+
+    const config = {
+      commandHost: "https://cmd.nqminds.com",
+      queryHost: "https://q.nqminds.com"  
+    };
+
+    const nqmindsTDX = new TDXApi(config);
+
+    // Authenticate using token id and secret (from the toolbox)
+    nqmindsTDX.authenticate("BJeMKwDUT","12345", function(err, accessToken) {
+      if (err) {
+
+      } else {
+        // Create a dataset.
+        nqmindsTDX.getDataset("SJx-IgF8a", function(err,data) {
+        if (err) console.log(err);
+        else console.log(data);
+
+      });
+      }  
+    });
     return( 
       <div id="main-container">
         <div id="widget-container">

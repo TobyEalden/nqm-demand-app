@@ -1,6 +1,6 @@
 import {Meteor} from "meteor/meteor";
 import {DDP} from "meteor/ddp";
-import {HTTP} from "meteor/http";
+import TDXApi from "nqm-api-tdx/client-api";
 import {ReactiveVar} from "meteor/reactive-var";
 
 // This class manages a DDP connection to a remote TDX DDP server.
@@ -57,24 +57,20 @@ class ConnectionManager {
     // Make sure we have a ddp connection.
     this.connect();
 
-    // Initialise the HTTP request with the given credentials
-    var options = {
-      headers: { 
-        authorization: "Basic " + shareId + ":" + password },
-      data: {
-        grant_type: "client_credentials",          
-      }
+    // Initialise the api request with the given credentials
+    const config = {
+      commandHost: Meteor.settings.public.commandHost,
+      queryHost: Meteor.settings.public.queryHost
     };
-
-    // Get an auth token from the TDX token endpoint.
-    HTTP.post(Meteor.settings.public.authServerURL + "/token", options, function(err, result) {
+    const api = new TDXApi(config);
+     // Get an auth token from the TDX token endpoint.
+    api.authenticate(shareId,password, function(err, accessToken) {
       if (err) {
         console.log("failed to get auth token: " + err.message);
       } else {
-        console.log(result);
-
+        console.log(accessToken);
         // Have a valid auth token - now try and authenticate the DDP channel
-        self.useToken(result.data.access_token);
+        self.useToken(accessToken);
       }
     });
   }

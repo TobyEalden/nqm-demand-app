@@ -1,30 +1,23 @@
 import connectionManager from "../connection-manager";
-import { HTTP } from "meteor/http";
+import TDXApi from "nqm-api-tdx/client-api";
 import {Meteor} from "meteor/meteor";
 
 
 function loadMapData({mapId, mapFilter, options, filter, pipeline, resourceId, centre, wgtId, settings, update}, onData) {
-  const headers = { authorization: "Bearer " + connectionManager.authToken };
-  const url = Meteor.settings.public.queryURL + "datasets/" + mapId + "/data";
-
-
-  HTTP.call("GET", url, { headers: headers, params: { opts: JSON.stringify(options), filter: JSON.stringify(mapFilter) }}, (err, response) => {
-    if (err) {
-      console.log("Failed to get data: ", err);
-    } else {
-      const agUrl = Meteor.settings.public.queryURL + "datasets/" + resourceId + "/aggregate";
-      const queryOptions = { limit: 5000};
-      const geoData = response.data.data;
-        
-      HTTP.call("GET", agUrl, { headers: headers, params: { opts: JSON.stringify(queryOptions), pipeline: pipeline }}, (err, response) => {
-        if (err) {
-          console.log("Failed to get data: ",err);
-        } else {
-
-          onData(null, {data: response.data.data, geoData: geoData});
-        }
+  const config = {
+    commandHost: Meteor.settings.public.commandHost,
+    queryHost: Meteor.settings.public.queryHost,
+    accessToken: connectionManager.authToken
+  };
+  const api = new TDXApi(config);
+  api.getDatasetData(mapId, mapFilter, null, options, (err, response) => {
+    if (err) console.log("Failed to get data: ", err);
+    else {
+      const geoData = response.data;
+      api.getAggregateData(resourceId, pipeline, {limit: 5000}, (err, response) => {
+        if (err) console.log("Failed to get data: ", err);
+        else onData(null, {data: response.data, geoData: geoData});
       });
-
     }
   });
 }
