@@ -9,6 +9,7 @@ import {List, ListItem} from 'material-ui/List';
 import Add from 'material-ui/svg-icons/content/add';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+import Subheader from 'material-ui/Subheader';
 
 class ScenarioEditor extends React.Component {
 
@@ -21,15 +22,15 @@ class ScenarioEditor extends React.Component {
     this.state = {
       newName: "",
       open: false,
-      message: "Scenario Added"
+      message: "Scenario Added",
+      error: ""
     }
   }
 
   createBuild() {
     if (this.state.newName === "" || (this.state.newName.length < 6)) {
       this.setState({
-        open: true,
-        message: "Please enter at least six characters"
+        error: "Please enter at least six characters"
       });
     }
     else {
@@ -43,14 +44,16 @@ class ScenarioEditor extends React.Component {
         if (err) {
           this.setState({
             open: true,
-            message: "Failed to create build: " + err
+            message: "Failed to create build: " + err,
+            error: ""
           });
         } 
         else {
           this.setState({
             newName: "",
             open: true,
-            message: "Created build"
+            message: "Created build",
+            error: ""
           });
         }
       });
@@ -81,6 +84,11 @@ class ScenarioEditor extends React.Component {
 
 
   render() {
+    const styles = {
+      input: {
+        maxWidth: "150px"
+      }
+    };
 
     const builds = _.map(this.props.data, (build) => {
       return (
@@ -93,14 +101,15 @@ class ScenarioEditor extends React.Component {
       );
     });
     return (
-      <div id="scenario-container">
-        <p>{this.props.name}</p><br />
-        <p>Region: {this.props.region}</p>
+      <div id="build-list">
         <List>
+          <Subheader>Region: {this.props.region}</Subheader>
           {builds}
         </List>
-        <TextField ref="buildName" hintText="Add New Build" value={this.state.newName} onChange={this.newName}/>
-        <Add onClick={this.createBuild}/>
+        <div className="textfield-add">
+          <TextField ref="buildName" hintText="Add New Build" value={this.state.newName} onChange={this.newName} style={styles.input} errorText={this.state.error}/>
+          <Add onClick={this.createBuild}/>
+        </div>
         <Snackbar
           open={this.state.open}
           message={this.state.message}

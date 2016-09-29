@@ -11,7 +11,7 @@ function loadAggregate({resourceId, pipeline}, onData) {
   const api = new TDXApi(config);
 
   api.getAggregateData(resourceId, pipeline, {limit: 5000}, (err, response) => {
-    onData(null, {data: response.data.data});
+    onData(null, {data: response.data});
   });
 }
 

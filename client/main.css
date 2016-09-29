@@ -31,8 +31,6 @@ input:-webkit-autofill:focus {
   stroke-width: 1.5px;
 }
 
-
-
 table {
     display: table;
     border-collapse: separate;
@@ -242,7 +240,40 @@ td {
 
 }
 
+#scenario-list {
+    flex-grow: 1;
+    flex-basis: 275px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    align-items: flex-start;
+}
 
+.textfield-add {
+    flex-grow: 1;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+#build-list {
+    flex-grow: 1;
+    flex-basis: 275px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    align-items: flex-start;
+}
 
 .tab-container {
     flex-grow: 1;

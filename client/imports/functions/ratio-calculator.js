@@ -7,7 +7,8 @@ function redistribute(items) {
     if (item.locked) lockedRatio += item.ratio;
     else unlockedNumber++;
   });
-  const unlockedRatio = (1-lockedRatio)/unlockedNumber;
+  let unlockedRatio = (1-lockedRatio)/unlockedNumber;
+  if (unlockedRatio < 0) unlockedRatio = 0;
   _.each(items, (item) => {
     if (!item.locked) item.ratio = unlockedRatio;
   });
@@ -23,7 +24,8 @@ function redistributePyramid(items) {
     if (item.lockedFemale) lockedRatio += item.female;
     else unlockedNumber++;
   });
-  const unlockedRatio = (1-lockedRatio)/unlockedNumber;
+  let unlockedRatio = (1-lockedRatio)/unlockedNumber;
+  if (unlockedRatio < 0) unlockedRatio = 0;
   _.each(items, (item) => {
     if (!item.lockedMale) item.male = unlockedRatio;
     if (!item.lockedFemale) item.female = unlockedRatio;

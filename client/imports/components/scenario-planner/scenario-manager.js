@@ -8,6 +8,9 @@ import {List, ListItem} from 'material-ui/List';
 import Add from 'material-ui/svg-icons/content/add';
 import AutoComplete from 'material-ui/AutoComplete';
 import Snackbar from 'material-ui/Snackbar';
+import Subheader from 'material-ui/Subheader';
+import Settings from 'material-ui/svg-icons/action/settings';
+import {lightBlue500, grey300} from 'material-ui/styles/colors';
 
 import ScenarioEditor from "../../containers/scenario-container";
 
@@ -38,7 +41,7 @@ class ScenarioManager extends React.Component {
       else elem = elem.parentNode;
     }
     this.setState({
-      scenario: elem.id
+      scenario: parseInt(elem.id, 10)
     });
   }
 
@@ -74,11 +77,10 @@ class ScenarioManager extends React.Component {
           
           const data = {
             scenario_name: this.state.newName,
-            scenario_folder: id.id,
+            scenario_folder: id.response.id,
             parent_area_code: "E10000014", // Dummy Data This is placeholder for Hampshire
-            base_population_datasetId: ""
+            base_population_datasetId: "SkxbDChh_" // Dummy Data This is placeholder for Hampshire
           };
-          console.log(data);
           api.addDatasetData(this.props.resourceId, data, (err, response) => {
             if (err) {
               this.setState({
@@ -110,12 +112,16 @@ class ScenarioManager extends React.Component {
 
   render() {
     const scenarios = _.map(this.props.data, (scenario, index) => {
+      let colour = grey300;
+      console.log(this.state);
+      if (index === this.state.scenario) colour = lightBlue500;
       return (
          <ListItem
           key={scenario.scenario_name}
           id={index}
           onTouchTap={this.changeScenario}
           primaryText={scenario.scenario_name}
+          rightIcon={<Settings color={colour}/>}
           />
       );
     });
@@ -123,27 +129,22 @@ class ScenarioManager extends React.Component {
       "schemaDefinition.basedOn": "PlanningPoplet",
       "parents": {"$eq":this.props.data[this.state.scenario].scenario_folder}
     };
-    // Dummy Data
-    const regionList = [{textKey: "Hampshire", valueKey: "SkxbDChh_"}];
-    const dataSourceConfig = {
-      text: 'textKey',
-      value: 'valueKey',
+    const styles = {
+      input: {
+        maxWidth: "150px"
+      }
     };
-
     return( 
       <div id="main-container">
-        <div id="widget-container">
+        <div id="scenario-list">
           <List>
+            <Subheader>Scenarios</Subheader>
             {scenarios}
           </List>
-          <TextField id="scenario-name" hintText="New Scenario Name" value={this.state.newName} onChange={this.newName} errorText={this.state.error}/>
-          <AutoComplete hintText="New Scenario Base Population"
-            filter={AutoComplete.fuzzyFilter}
-            dataSource={regionList}
-            dataSourceConfig={dataSourceConfig}
-            openOnFocus={true}
-          />
-          <Add onClick={this.addScenario}/>
+          <div className="textfield-add">
+            <TextField id="scenario-name" hintText="New Scenario Name" style={styles.input} value={this.state.newName} onChange={this.newName} errorText={this.state.error}/>
+            <Add onClick={this.addScenario}/>
+          </div>
         </div>
 
         <ScenarioEditor options={{limit: 1000}} filter={filter} folder={this.props.data[this.state.scenario].scenario_folder} name={this.props.data[this.state.scenario].scenario_name} region={this.props.data[this.state.scenario].parent_area_code}/>

@@ -113,7 +113,9 @@ function getRecipe(poplets) {
     const state = {
       lsoaData: lsoaData,
       populations: populations,
-      age_bands: age_bands
+      age_bands: age_bands,
+      open: false,
+      message: ""
     };
 
     return state;
@@ -123,7 +125,9 @@ function getRecipe(poplets) {
     populations: [{year: new Date().getFullYear().toString(), population: 0}],
     age_bands: _.map(Meteor.settings.public.allAgeBands, (band) => {
       return { range: band, female: 1/(2*Meteor.settings.public.allAgeBands.length), male: 1/(2*Meteor.settings.public.allAgeBands.length), lockedMale: false, lockedFemale: false };
-    })
+    }),
+    open: false,
+    message: ""
   };
 }
 

@@ -7,6 +7,9 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import PopIcon from "material-ui/svg-icons/action/supervisor-account";
 import LSOAIcon from "material-ui/svg-icons/action/language";
 import DistIcon from "material-ui/svg-icons/av/equalizer";
+import Snackbar from 'material-ui/Snackbar';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import MapWidget from "../../containers/map-wrapper-container";
 import LSOATable from "./lsoa-table";
@@ -14,10 +17,8 @@ import DistributionTable from "./distribution-table";
 import PopulationTable from "./population-table";
 
 import { redistribute, redistributePyramid } from "../../functions/ratio-calculator"; 
-
 import { genPoplets, getRecipe } from "../../functions/poplet-generator";
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+
 
 
 _ = lodash;
@@ -37,6 +38,7 @@ class BuildEditor extends React.Component {
     this.removePop = this.removePop.bind(this);
     this.addPop = this.addPop.bind(this);
     this.save = this.save.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   addRegion(id, name) {
@@ -160,15 +162,40 @@ class BuildEditor extends React.Component {
     };
     const api = new TDXApi(config);
     api.truncateDataset(this.props.resourceId, (err, response) => {
-      if (err) console.log("Failed to erase data: ", err);
+      if (err) {
+        console.log("Failed to erase data: ", err);
+        this.setState({
+          open: true,
+          message: "Failed to save build"
+        });
+      }
       else {
         api.addDatasetData(this.props.resourceId, genPoplets(this.state.lsoaData, this.state.populations, this.state.age_bands), (err, response) => {
-          if (err) console.log("Failed to write data: ", err);
-          else console.log("wrote to dataset");
+          if (err) {
+            console.log("Failed to write data: ", err);
+            this.setState({
+              open: true,
+              message: "Failed to save build"
+            });
+          }
+          else {
+            console.log("wrote to dataset");
+            this.setState({
+              open: true,
+              message: "Build saved"
+            });
+          }
         });
       }
     });    
   }
+
+  handleRequestClose() {
+    this.setState({
+      open: false
+    });
+  };
+
   render() {
     const pipeline='[{"$match":{"parent_id":"' + this.props.region + '","child_type":"LSOA11CD"}},{"$group":{"_id":null,"id_array":{"$push":"$child_id"}}}]';
     return (
@@ -199,6 +226,12 @@ class BuildEditor extends React.Component {
           <ContentAdd />
         </FloatingActionButton>
         </div>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
 
       </div>
     );
